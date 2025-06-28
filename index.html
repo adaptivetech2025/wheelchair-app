@@ -96,6 +96,8 @@
         <button id="return-to-home" class="button hidden">Return to Home</button>
       </div>
       <button id="turn-off-reminders-profile" class="turn-off-button">Turn Off My Reminders</button>
+      <button id="turn-on-reminders-profile" class="turn-on-button">Turn On My Reminders</button>
+      <div class="reminder-status" id="reminder-status">Reminders: ❌ OFF</div>
       <div class="since-date" id="since-date"></div>
     </div>
     <div id="reminders" class="reminders hidden">
@@ -145,6 +147,7 @@
     let seatCount = JSON.parse(localStorage.getItem("seatCount") || '{"n/a": 0, "Air Seat Cushion": 0, "Foam Seat Cushion": 0, "Gel Seat Cushion": 0}');
     let startDate = localStorage.getItem(`startDate_${profileId}`) || new Date().toLocaleDateString();
     let navigationHistory = [];
+    let remindersEnabled = localStorage.getItem(`remindersEnabled_${profileId}`) !== "false";
 
     // Initialize or load profile using IP address and update counters
     async function initializeProfile() {
@@ -158,6 +161,7 @@
           localStorage.setItem("userCount", userCount);
           document.getElementById("user-count").textContent = userCount;
           localStorage.setItem(`startDate_${profileId}`, startDate);
+          localStorage.setItem(`remindersEnabled_${profileId}`, "true");
         } catch (error) {
           console.error("Failed to fetch IP:", error);
           profileId = "default-" + Date.now();
@@ -166,6 +170,7 @@
           localStorage.setItem("userCount", userCount);
           document.getElementById("user-count").textContent = userCount;
           localStorage.setItem(`startDate_${profileId}`, startDate);
+          localStorage.setItem(`remindersEnabled_${profileId}`, "true");
         }
         localStorage.setItem(`profile_${profileId}`, JSON.stringify([]));
         localStorage.setItem(`contacts_${profileId}`, JSON.stringify({ vendor: {}, therapist: {} }));
@@ -173,6 +178,7 @@
       loadProfile();
       updateAdminStats();
       updateSinceDate();
+      updateReminderStatus();
     }
 
     function updateSinceDate() {
@@ -268,9 +274,8 @@
     function nextSection(currentCardId, nextCardId) {
       try {
         if (currentCardId === "selection-primary-card") {
-          const primaryEquipment = document.getElementById("primary-equipment").value;
+          const primaryEquipment = document.getElementById("primary-equipment").value || null;
           if (primaryEquipment) selectedComponents = [primaryEquipment];
-          else selectedComponents = []; // Allow empty but track intent
         } else if (currentCardId === "selection-power-card") {
           const detachablePowerAssist = document.getElementById("detachable-power-assist").checked ? "Detachable Power Assist" : null;
           const handRimPowerAssist = document.getElementById("hand-rim-power-assist").checked ? "Hand-Rim Activated Power Assist" : null;
@@ -349,10 +354,6 @@
 
     function submitReminders() {
       try {
-        if (selectedComponents.length === 0) {
-          selectedComponents = []; // Allow empty but proceed
-        }
-
         const reminderList = document.getElementById("reminder-list");
         reminderList.innerHTML = "";
         selectedComponents.forEach(component => {
@@ -374,7 +375,7 @@
         document.getElementById("contact-card").classList.add("hidden");
         goHome(); // Redirect to profile after reminders
 
-        if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
+        if (typeof Notification !== "undefined" && Notification.permission !== "granted" && remindersEnabled) {
           Notification.requestPermission().then(permission => {
             if (permission === "granted") {
               sendNotifications();
@@ -382,10 +383,10 @@
               alert("Notifications are disabled. Please enable them in browser settings.");
             }
           });
-        } else if (Notification.permission === "granted") {
+        } else if (Notification.permission === "granted" && remindersEnabled) {
           sendNotifications();
         } else {
-          alert("This browser does not support notifications.");
+          alert("This browser does not support notifications or reminders are off.");
         }
       } catch (error) {
         console.error("Error submitting reminders:", error);
@@ -395,36 +396,74 @@
     }
 
     function sendNotifications() {
-      selectedComponents.forEach(component => {
-        const schedule = MAINTENANCE_SCHEDULES[component];
-        Object.entries(MAINTENANCE_SCHEDULES).forEach(([key, { label, task, redFlag }]) => {
-          if (key === component && task) {
-            let body = `${label} - ${redFlag}`;
-            if (redFlag.includes("Contact vendor") && contacts.vendor.phone) {
-              body += `; Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}`;
-            } else if (redFlag.includes("Contact dealer") && contacts.therapist.phone) {
-              body += `; Therapist: ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email} (${contacts.therapist.hospital})`;
+      if (remindersEnabled) {
+        selectedComponents.forEach(component => {
+          const schedule = MAINTENANCE_SCHEDULES[component];
+          Object.entries(MAINTENANCE_SCHEDULES).forEach(([key, { label, task, redFlag }]) => {
+            if (key === component && task) {
+              let body = `${label} - ${redFlag}`;
+              if (redFlag.includes("Contact vendor") && contacts.vendor.phone) {
+                body += `; Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}`;
+              } else if (redFlag.includes("Contact dealer") && contacts.therapist.phone) {
+                body += `; Therapist: ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email} (${contacts.therapist.hospital})`;
+              }
+              new Notification(`Reminder: ${task}`, { body });
             }
-            new Notification(`Reminder: ${task}`, { body });
-          }
+          });
         });
-      });
+      }
     }
 
     function turnOffReminders() {
       if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-        Notification.permission = "denied";
-        localStorage.removeItem(`profile_${profileId}`);
+        remindersEnabled = false;
+        localStorage.setItem(`remindersEnabled_${profileId}`, "false");
         disableCount++;
         localStorage.setItem("disableCount", disableCount);
         document.getElementById("disable-count").textContent = disableCount;
-        alert("Reminders have been turned off. Refresh the page to confirm.");
+        alert("Reminders have been turned off. Refresh the page to confirm or turn them back on.");
         document.getElementById("reminders").classList.add("hidden");
         document.getElementById("contact-card").classList.add("hidden");
         document.getElementById("selection-primary-card").classList.remove("hidden");
         navigationHistory = ["selection-primary-card"];
+        updateReminderStatus();
       } else {
         alert("Notifications are already disabled or not supported.");
+      }
+    }
+
+    function turnOnReminders() {
+      if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
+        remindersEnabled = true;
+        localStorage.setItem(`remindersEnabled_${profileId}`, "true");
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            sendNotifications();
+            alert("Reminders have been turned on and notifications sent.");
+          } else {
+            alert("Notifications are disabled. Please enable them in browser settings.");
+            remindersEnabled = false;
+            localStorage.setItem(`remindersEnabled_${profileId}`, "false");
+          }
+          updateReminderStatus();
+        });
+      } else if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+        remindersEnabled = true;
+        localStorage.setItem(`remindersEnabled_${profileId}`, "true");
+        sendNotifications();
+        alert("Reminders have been turned on and notifications sent.");
+        updateReminderStatus();
+      } else {
+        alert("This browser does not support notifications.");
+      }
+    }
+
+    function updateReminderStatus() {
+      const statusElement = document.getElementById("reminder-status");
+      if (remindersEnabled && Notification.permission === "granted") {
+        statusElement.textContent = "Reminders: ✅ ON";
+      } else {
+        statusElement.textContent = "Reminders: ❌ OFF";
       }
     }
 
@@ -482,8 +521,8 @@
       const nextToContact = document.getElementById("next-to-contact");
       const submitContact = document.getElementById("submit-contact");
       const submitFinal = document.getElementById("submit-final");
-      const turnOffRemindersBtn = document.getElementById("turn-off-reminders");
-      const turnOffRemindersProfileBtn = document.getElementById("turn-off-reminders-profile");
+      const turnOffRemindersBtn = document.getElementById("turn-off-reminders-profile");
+      const turnOnRemindersBtn = document.getElementById("turn-on-reminders-profile");
       const backButtons = document.querySelectorAll("#back-button");
       const returnToHome = document.getElementById("return-to-home");
       const returnToHomeReminders = document.getElementById("return-to-home-reminders");
@@ -498,7 +537,7 @@
       if (submitContact) submitContact.addEventListener("click", () => { submitContact(); navigationHistory.push("reminders"); updateNavButtons(); });
       if (submitFinal) submitFinal.addEventListener("click", () => { submitReminders(); navigationHistory.push("profile-card"); updateNavButtons(); });
       if (turnOffRemindersBtn) turnOffRemindersBtn.addEventListener("click", turnOffReminders);
-      if (turnOffRemindersProfileBtn) turnOffRemindersProfileBtn.addEventListener("click", turnOffReminders);
+      if (turnOnRemindersBtn) turnOnRemindersBtn.addEventListener("click", turnOnReminders);
     });
   </script>
 </body>
