@@ -225,7 +225,7 @@
       currentStep = "profile"; // Redirect to profile on Finish
       updateDisplay();
       saveData();
-      if (remindersEnabled && typeof Notification !== "undefined") {
+      if (remindersEnabled && typeof Notification !== "undefined" && !isIOSChrome()) {
         if (Notification.permission !== "granted") {
           Notification.requestPermission().then(permission => {
             if (permission === "granted") {
@@ -235,6 +235,8 @@
         } else {
           sendNotifications();
         }
+      } else if (isIOSChrome()) {
+        alert("Notifications are not supported in Chrome on iOS. Please use Safari for reminders.");
       }
     }
 
@@ -265,27 +267,35 @@
     }
 
     function turnOnReminders() {
-      if (typeof Notification !== "undefined") {
-        remindersEnabled = true;
-        localStorage.setItem(`remindersEnabled_${profileId}`, "true");
-        if (Notification.permission !== "granted") {
-          Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-              sendNotifications();
-              alert("Reminders turned on and notifications sent.");
-            } else {
-              remindersEnabled = false;
-              localStorage.setItem(`remindersEnabled_${profileId}`, "false");
-              alert("Notifications not enabled. Please allow in settings.");
-            }
-          });
-        } else {
-          sendNotifications();
-          alert("Reminders turned on and notifications sent.");
+      if (typeof Notification !== "undefined" && !isIOSChrome()) {
+        if (confirm("Are you sure you want to turn on reminders? This will enable notifications.")) {
+          remindersEnabled = true;
+          localStorage.setItem(`remindersEnabled_${profileId}`, "true");
+          if (Notification.permission !== "granted") {
+            Notification.requestPermission().then(permission => {
+              if (permission === "granted") {
+                sendNotifications();
+                alert("Reminders turned on and notifications sent.");
+              } else {
+                remindersEnabled = false;
+                localStorage.setItem(`remindersEnabled_${profileId}`, "false");
+                alert("Notifications not enabled. Please allow in settings.");
+              }
+            });
+          } else {
+            sendNotifications();
+            alert("Reminders turned on and notifications sent.");
+          }
         }
+      } else if (isIOSChrome()) {
+        alert("Notifications are not supported in Chrome on iOS. Please use Safari for reminders.");
       } else {
         alert("This browser does not support notifications.");
       }
+    }
+
+    function isIOSChrome() {
+      return /iP(ad|hone|od)/.test(navigator.userAgent) && /CriOS/.test(navigator.userAgent);
     }
 
     function resetData() {
