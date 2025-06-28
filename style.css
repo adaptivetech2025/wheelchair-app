@@ -82,7 +82,7 @@ h1 {
 .turn-off-button:hover {
   background-color: #dc2626;
 }
-.reminders, .confirmation, .profile, .contact-card {
+.reminders, .profile, .contact-card {
   margin-top: 1.5rem;
   width: 100%;
   max-width: 40rem;
