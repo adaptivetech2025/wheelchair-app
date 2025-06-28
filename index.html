@@ -116,6 +116,7 @@
     let startDate = localStorage.getItem(`startDate_${profileId}`) || new Date().toLocaleDateString();
     let currentStep = localStorage.getItem(`currentStep_${profileId}`) || "selection";
     let remindersEnabled = localStorage.getItem(`remindersEnabled_${profileId}`) !== "false";
+    let lastNotified = localStorage.getItem(`lastNotified_${profileId}`) || 0;
 
     function generateProfileId() {
       try {
@@ -160,6 +161,7 @@
         localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
         localStorage.setItem(`currentStep_${profileId}`, currentStep);
         localStorage.setItem(`remindersEnabled_${profileId}`, remindersEnabled);
+        localStorage.setItem(`lastNotified_${profileId}`, lastNotified);
         // Update category counts
         Object.keys(mobilityBaseCount).forEach(key => mobilityBaseCount[key] = 0);
         Object.keys(backrestCount).forEach(key => backrestCount[key] = 0);
@@ -235,8 +237,8 @@
         } else {
           sendNotifications();
         }
-      } else if (isIOSChrome()) {
-        alert("Notifications are not supported in Chrome on iOS. Please use Safari for reminders.");
+      } else if (remindersEnabled && isIOSChrome()) {
+        checkAndShowAlert();
       }
     }
 
@@ -288,7 +290,12 @@
           }
         }
       } else if (isIOSChrome()) {
-        alert("Notifications are not supported in Chrome on iOS. Please use Safari for reminders.");
+        if (confirm("Are you sure you want to turn on reminders? Notifications are not supported in Chrome on iOS; alerts will be used instead.")) {
+          remindersEnabled = true;
+          localStorage.setItem(`remindersEnabled_${profileId}`, "true");
+          checkAndShowAlert();
+          alert("Reminders turned on; alerts will appear periodically.");
+        }
       } else {
         alert("This browser does not support notifications.");
       }
@@ -296,6 +303,18 @@
 
     function isIOSChrome() {
       return /iP(ad|hone|od)/.test(navigator.userAgent) && /CriOS/.test(navigator.userAgent);
+    }
+
+    function checkAndShowAlert() {
+      const now = Date.now();
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      if (remindersEnabled && now - lastNotified > twentyFourHours) {
+        const sampleComponent = selectedComponents[0] || "your equipment";
+        const sampleSchedule = MAINTENANCE_SCHEDULES[sampleComponent] || { task: "check your equipment", redFlag: "contact support" };
+        alert(`Reminder: ${sampleSchedule.task}\n${sampleComponent} - ${sampleSchedule.redFlag}`);
+        lastNotified = now;
+        localStorage.setItem(`lastNotified_${profileId}`, lastNotified);
+      }
     }
 
     function resetData() {
@@ -357,12 +376,16 @@
       document.getElementById("disable-count").textContent = disableCount;
     }
 
-    // Initialize on load
+    // Initialize on load and set up alert check
     document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("profileId", profileId);
       updateDisplay();
       saveData();
       updateAdminStats();
+      if (remindersEnabled && isIOSChrome()) {
+        checkAndShowAlert(); // Initial check on load
+        setInterval(checkAndShowAlert, 24 * 60 * 60 * 1000); // Check every 24 hours
+      }
 
       document.querySelectorAll("#home-button").forEach(btn => btn.addEventListener("click", goHome));
       document.getElementById("next-to-contact").addEventListener("click", goNext);
