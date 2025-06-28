@@ -4,594 +4,211 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wheelchair Maintenance Reminder</title>
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/babel-standalone@7.22.5/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://favicon.io/favicon.ico">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Wheelchair Reminder">
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
+  <div class="container">
+    <h1>Wheelchair Maintenance Reminder</h1>
+    <div class="card">
+      <div class="mb-4">
+        <label class="label">Equipment Type</label>
+        <select id="equipment" class="select">
+          <option value="">Select equipment</option>
+          <option value="Rigid Ultra-Light Manual Wheelchair">Rigid Ultra-Light Manual Wheelchair</option>
+          <option value="Folding Ultra-Light Manual Wheelchair">Folding Ultra-Light Manual Wheelchair</option>
+          <option value="Hand-Rim Activated Power Assist">Hand-Rim Activated Power Assist</option>
+          <option value="Detachable Power Assist">Detachable Power Assist</option>
+          <option value="Power Wheelchair with Power Seating Functions">Power Wheelchair with Power Seating Functions</option>
+          <option value="Power Wheelchair without Power Seating Functions">Power Wheelchair without Power Seating Functions</option>
+          <option value="Air Backrest Cushion">Air Backrest Cushion</option>
+          <option value="Foam Backrest Cushion">Foam Backrest Cushion</option>
+          <option value="Foam Seat Cushion">Foam Seat Cushion</option>
+          <option value="Gel Seat Cushion">Gel Seat Cushion</option>
+          <option value="Air Seat Cushion">Air Seat Cushion</option>
+        </select>
+      </div>
+      <button class="button" onclick="setReminders()">Set Reminders</button>
+    </div>
+    <div id="reminders" class="reminders" style="display: none;">
+      <h2>Scheduled Reminders</h2>
+      <ul id="reminder-list"></ul>
+    </div>
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+  <script>
     const MAINTENANCE_SCHEDULES = {
-      // Power Wheelchairs (HCPCS K0835, K0861)
-      "Permobil F3 Corpus": {
-        battery: { task: "Check battery level indicator and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-        joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-        parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-        belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (35–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 30 psi" },
-        lights: { task: "Check lights and turn signals for operation and cleanliness", frequency: "weekly", redFlag: "Contact vendor if lights fail" },
-        upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-        seating: { task: "Check upholstery, seating, and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      "Rigid Ultra-Light Manual Wheelchair": {
+        camber: { task: "Check camber plug clamps and axle sleeves for tightness", frequency: "weekly", redFlag: "Contact vendor if clamps or sleeves are loose" },
+        handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
+        wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
+        seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
+        casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
+        armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
+        footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
+        anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
+        frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
+        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
       },
-      "Permobil M3 Corpus": {
+      "Folding Ultra-Light Manual Wheelchair": {
+        folding: { task: "Check folding mechanism for smooth operation", frequency: "weekly", redFlag: "Contact vendor if mechanism sticks" },
+        handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
+        wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
+        seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
+        casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
+        armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
+        footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
+        anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
+        frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
+        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      },
+      "Hand-Rim Activated Power Assist": {
+        exterior: { task: "Visually check components for damage", frequency: "daily", redFlag: "Contact dealer if components are damaged" },
+        anti_tip: { task: "Ensure anti-tip device is in correct position and locked", frequency: "daily", redFlag: "Contact dealer if anti-tip is loose" },
+        tires: { task: "Check tires for depth, cracks, and inflate (e.g., 450 kPa)", frequency: "daily", redFlag: "Contact dealer if pressure drops significantly" },
+        brakes: { task: "Ensure parking brakes stop wheels and are secure", frequency: "daily", redFlag: "Contact dealer if brakes fail" },
+        wheels: { task: "Check wheels for deformation and broken spokes", frequency: "daily", redFlag: "Contact dealer if wheels are damaged" },
+        casters: { task: "Check caster tires and forks for cracks and wear", frequency: "daily", redFlag: "Contact dealer if casters are damaged" },
+        battery: { task: "Check battery residual capacity", frequency: "daily", redFlag: "Contact dealer if battery fails to charge" },
+        cleaning: { task: "Wipe down with damp towel and neutral detergent", frequency: "weekly", redFlag: "Avoid water hosing; contact dealer if damage occurs" },
+        service: { task: "Complete inspection by authorized dealer", frequency: "6 months", redFlag: "Schedule service if not done every 6 months" }
+      },
+      "Detachable Power Assist": {
+        inspection: { task: "Inspect components for damage", frequency: "daily", redFlag: "Contact dealer if broken or cracked parts found" },
+        rollers: { task: "Check rollers for wear or flats", frequency: "weekly", redFlag: "Contact dealer if rollers are significantly worn" },
+        cables: { task: "Check cables for fraying or damage", frequency: "weekly", redFlag: "Contact dealer if cables are damaged" },
+        clamp: { task: "Ensure clamp is secure and not rotated", frequency: "weekly", redFlag: "Contact dealer if clamp is loose" },
+        motor: { task: "Check for abnormal motor activation/deactivation", frequency: "weekly", redFlag: "Contact dealer if motor issues occur" },
+        cleaning: { task: "Wipe down with damp cloth", frequency: "monthly", redFlag: "Contact dealer if cleaning causes damage" },
+        firmware: { task: "Update firmware via app", frequency: "monthly", redFlag: "Contact dealer if firmware update fails" },
+        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      },
+      "Power Wheelchair with Power Seating Functions": {
         battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
         joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
         parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
         belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (35–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 30 psi" },
-        lights: { task: "Check lights for operation", frequency: "weekly", redFlag: "Contact vendor if lights fail" },
-        upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-        seating: { task: "Check seating, headrest, and arm pads for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Quickie QM-710": {
-        battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-        joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-        parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-        belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-        suspension: { task: "Inspect SpiderTrac suspension for wear", frequency: "weekly", redFlag: "Contact vendor if suspension is loose" },
-        upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-        seating: { task: "Check Sedeo Pro seating for wear", frequency: "monthly", redFlag: "Contact vendor if seating is damaged" },
-        service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Quickie QM-715 HD": {
-        battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-        joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-        parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-        belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-        lights: { task: "Check lights for operation", frequency: "weekly", redFlag: "Contact vendor if lights fail" },
+        tires: { task: "Check tires and inflate (30–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops significantly" },
+        seating_functions: { task: "Test power seating functions (e.g., iLevel, tilt)", frequency: "weekly", redFlag: "Contact vendor if functions fail" },
         upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
         seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
       },
-      "Invacare TDX SP2": {
+      "Power Wheelchair without Power Seating Functions": {
         battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
         joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
         parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
         belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (35–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 30 psi" },
+        tires: { task: "Check tires and inflate (30–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops significantly" },
         motors: { task: "Listen for unusual motor noises", frequency: "weekly", redFlag: "Contact vendor if noises persist" },
         upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
         seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
       },
-      "Quantum Q6 Edge 3": {
-        battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-        joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-        parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-        belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-        ilevel: { task: "Test iLevel seat elevation functionality", frequency: "weekly", redFlag: "Contact vendor if elevation fails" },
-        upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-        seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      "Air Backrest Cushion": {
+        cover: { task: "Check cover for tears; machine wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
+        air_insert: { task: "Check air inserts for punctures; adjust inflation", frequency: "weekly", redFlag: "Contact vendor if punctures or leaks detected" },
+        cleaning: { task: "Wipe with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
+        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
       },
-      "Quantum 4Front": {
-        battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-        joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-        parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-        belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-        suspension: { task: "Inspect suspension system for wear", frequency: "weekly", redFlag: "Contact vendor if suspension is loose" },
-        upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-        seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      "Foam Backrest Cushion": {
+        cover: { task: "Check cover for tears; machine wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
+        foam_pad: { task: "Inspect foam pad for degradation", frequency: "monthly", redFlag: "Contact vendor if foam is degraded" },
+        lumbar_support: { task: "Check lumbar support for wear; ensure secure attachment", frequency: "monthly", redFlag: "Contact vendor if pad is loose or damaged" },
+        cleaning: { task: "Wipe with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
+        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
       },
-      // Ultralight Manual Wheelchairs (HCPCS K0005)
-      "TiLite Aero T": {
-        camber: { task: "Check camber plug clamps and axle sleeves for tightness", frequency: "weekly", redFlag: "Contact vendor if clamps or sleeves are loose" },
-        handrims: { task: "Inspect handrims for rough edges or peeling", frequencyრ
+      "Foam Seat Cushion": {
+        cover: { task: "Check cover for tears; hand wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
+        foam: { task: "Inspect foam for degradation", frequency: "monthly", redFlag: "Replace foam if contaminated or degraded" },
+        cleaning: { task: "Clean cover with mild detergent", frequency: "weekly", redFlag: "Contact vendor if cleaning causes damage" },
+        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      },
+      "Gel Seat Cushion": {
+        cover: { task: "Check cover for tears; machine wash warm, air dry", frequency: "monthly", redFlag: "Replace cover if torn or worn" },
+        fluid_pad: { task: "Inspect fluid pad for punctures or degradation", frequency: "monthly", redFlag: "Contact vendor if punctures or leaks detected" },
+        foam_base: { task: "Check foam base for consistency", frequency: "monthly", redFlag: "Contact vendor if foam is degraded" },
+        assembly: { task: "Ensure proper reassembly after cleaning", frequency: "monthly", redFlag: "Contact vendor if components do not align" },
+        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      },
+      "Air Seat Cushion": {
+        cover: { task: "Check cover for tears; wash with mild detergent, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
+        air_cells: { task: "Check air cells for punctures; adjust inflation", frequency: "weekly", redFlag: "Contact vendor if punctures or leaks detected" },
+        valve: { task: "Ensure valve is closed and undamaged", frequency: "weekly", redFlag: "Contact vendor if valve is damaged or leaking" },
+        cleaning: { task: "Wipe air cells with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
+        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+      }
+    };
 
-System: I notice that your previous message was cut off mid-sentence. Since you’re seeing a white screen both locally and on the deployed Vercel site (`https://wheelchair-app-6zsx-o236bnwnd-blakes-projects-cb552c5b.vercel.app/`), I’ll continue from the provided context to help you resolve the issue with your Wheelchair Maintenance Reminder app. This app is a single `index.html` file with embedded React and Tailwind CSS (loaded via CDNs) and includes maintenance schedules for wheelchairs and seating systems, per MetroHealth protocol (Sections 7.0, 8.0, 16.0). The white screen suggests a client-side rendering issue, likely due to a JavaScript error, CDN failure, or browser compatibility problem with the `text/babel` script. The fact that the previous `404: NOT_FOUND` error is resolved indicates that Vercel is correctly serving `index.html`, so we’ll focus on fixing the rendering issue.
+    function setReminders() {
+      try {
+        const equipmentSelect = document.getElementById("equipment");
+        const reminderList = document.getElementById("reminder-list");
+        const remindersDiv = document.getElementById("reminders");
+        const errorDiv = document.getElementById("error");
 
-### Why the White Screen Persists
-Based on the information provided and common causes for a white screen in a React single-page app (SPA) like yours, the likely issues are:
-1. **Deprecated ReactDOM.render**: The app uses `ReactDOM.render`, which is deprecated in React 18 and may cause rendering issues in some environments.
-2. **CDN Issues**: The CDNs for React, ReactDOM, Babel, or Tailwind CSS might be failing to load due to network issues, outdated URLs, or browser restrictions.
-3. **Babel Transpilation**: The `text/babel` script requires Babel to transpile JSX, which may not work reliably in all browsers or if the Babel CDN fails.
-4. **JavaScript Error**: A syntax or runtime error in the `<script type="text/babel">` section could prevent rendering.
-5. **File Corruption**: The `index.html` file might have encoding issues or extra characters from improper saving.
-
-Since the issue occurs both locally and on Vercel, it’s likely a problem with `index.html` or its dependencies. The previous suggestion to replace `ReactDOM.render` with `ReactDOM.createRoot` is a good start, but since the white screen persists, we’ll dive deeper into debugging and provide an updated `index.html` with additional fixes, including a fallback for Babel and error logging to identify the root cause.
-
-### Step-by-Step Instructions to Fix the White Screen
-
-#### 1. Debug Locally to Pinpoint the Issue
-Since you’re seeing the white screen locally, let’s start by identifying the exact error.
-
-1. **Verify `index.html`**:
-   - Download `index.html` from your GitHub repository (`https://github.com/adaptivetech2025/wheelchair-app/blob/main/index.html`) or use the updated artifact below.
-   - Save it to `Desktop/wheelchair-app/index.html`:
-     - Open Notepad, paste the code from the artifact, click `File` > `Save As`, set “File name” to `index.html`, “Save as type” to “All Files (*.*)”, and “Encoding” to “UTF-8”.
-   - Open the file in **Google Chrome** by double-clicking it.
-
-2. **Check Browser Console for Errors**:
-   - Right-click the white screen in Chrome, select `Inspect`, and go to the **Console** tab.
-   - Look for errors like:
-     - `Uncaught SyntaxError: Unexpected token '<'` (parsing issue in JavaScript).
-     - `Failed to load resource` (CDN failure for React, ReactDOM, Babel, or Tailwind).
-     - `ReactDOM is not defined` or `createRoot is not a function` (CDN or React version issue).
-     - `Babel is not defined` or JSX transpilation errors (Babel issue).
-   - Share the exact error message(s) or a screenshot of the Console tab with me for precise troubleshooting.
-
-3. **Test CDN Connectivity**:
-   - Open Chrome and visit these CDN URLs to ensure they load:
-     - `https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js`
-     - `https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js`
-     - `https://cdn.jsdelivr.net/npm/babel-standalone@7.22.5/babel.min.js`
-     - `https://cdn.tailwindcss.com`
-   - If any fail (e.g., 404 or timeout), try a different network or disable ad blockers/extensions temporarily.
-   - If they load but the white screen persists, the issue is likely in the JavaScript code or Babel transpilation.
-
-4. **Add Error Logging**:
-   - The updated `index.html` below includes a `try-catch` block around the React rendering code to log errors to the console, helping identify the issue.
-   - It also uses a newer Babel CDN (`@7.25.7`) to ensure compatibility and adds a fallback if Babel fails to load.
-
-#### 2. Update `index.html` with Fixes
-The updated `index.html` includes:
-- **ReactDOM.createRoot**: Replaces the deprecated `ReactDOM.render` for React 18 compatibility.
-- **Updated Babel CDN**: Uses `@7.25.7` for better JSX transpilation.
-- **Error Logging**: Wraps the rendering code in a `try-catch` to display errors in the console.
-- **Fallback Message**: Displays a message if the app fails to load, improving user experience.
-
-**Updated Artifact: `index.html`**
-<xaiArtifact artifact_id="1696d102-bd46-4bd0-a42c-1383aeecfd2f" artifact_version_id="df3eab0a-3750-467a-912f-032f6521e2e5" title="index.html" contentType="text/html">
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wheelchair Maintenance Reminder</title>
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.25.7/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://favicon.io/favicon.ico">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Wheelchair Reminder">
-</head>
-<body>
-  <div id="root"></div>
-  <div id="error" style="display: none; color: red; text-align: center; padding: 20px;">
-    Error loading the application. Please check the console for details.
-  </div>
-  <script type="text/babel">
-    try {
-      const MAINTENANCE_SCHEDULES = {
-        // Power Wheelchairs (HCPCS K0835, K0861)
-        "Permobil F3 Corpus": {
-          battery: { task: "Check battery level indicator and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-          joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-          parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-          belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-          tires: { task: "Check tires and inflate (35–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 30 psi" },
-          lights: { task: "Check lights and turn signals for operation and cleanliness", frequency: "weekly", redFlag: "Contact vendor if lights fail" },
-          upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-          seating: { task: "Check upholstery, seating, and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Permobil M3 Corpus": {
-          battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-          joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-          parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-          belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-          tires: { task: "Check tires and inflate (35–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 30 psi" },
-          lights: { task: "Check lights for operation", frequency: "weekly", redFlag: "Contact vendor if lights fail" },
-          upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-          seating: { task: "Check seating, headrest, and arm pads for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Quickie QM-710": {
-          battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-          joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-          parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-          belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-          tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-          suspension: { task: "Inspect SpiderTrac suspension for wear", frequency: "weekly", redFlag: "Contact vendor if suspension is loose" },
-          upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-          seating: { task: "Check Sedeo Pro seating for wear", frequency: "monthly", redFlag: "Contact vendor if seating is damaged" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Quickie QM-715 HD": {
-          battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-          joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-          parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-          belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-          tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-          lights: { task: "Check lights for operation", frequency: "weekly", redFlag: "Contact vendor if lights fail" },
-          upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-          seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Invacare TDX SP2": {
-          battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-          joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-          parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-          belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-          tires: { task: "Check tires and inflate (35–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 30 psi" },
-          motors: { task: "Listen for unusual motor noises", frequency: "weekly", redFlag: "Contact vendor if noises persist" },
-          upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-          seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Quantum Q6 Edge 3": {
-          battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-          joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-          parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-          belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-          tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-          ilevel: { task: "Test iLevel seat elevation functionality", frequency: "weekly", redFlag: "Contact vendor if elevation fails" },
-          upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-          seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Quantum 4Front": {
-          battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-          joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-          parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-          belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-          tires: { task: "Check tires and inflate (30–40 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops below 25 psi" },
-          suspension: { task: "Inspect suspension system for wear", frequency: "weekly", redFlag: "Contact vendor if suspension is loose" },
-          upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-          seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        // Ultralight Manual Wheelchairs (HCPCS K0005)
-        "TiLite Aero T": {
-          camber: { task: "Check camber plug clamps and axle sleeves for tightness", frequency: "weekly", redFlag: "Contact vendor if clamps or sleeves are loose" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks embed into tire and prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "TiLite TRA": {
-          camber: { task: "Check camber plug clamps and axle sleeves for tightness", frequency: "weekly", redFlag: "Contact vendor if clamps or sleeves are loose" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks embed into tire and prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "TiLite Aero Z": {
-          camber: { task: "Check camber plug clamps and axle sleeves for tightness", frequency: "weekly", redFlag: "Contact vendor if clamps or sleeves are loose" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks embed into tire and prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "TiLite ZRA": {
-          camber: { task: "Check camber plug clamps and axle sleeves for tightness", frequency: "weekly", redFlag: "Contact vendor if clamps or sleeves are loose" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks embed into tire and prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Quickie Nitrum": {
-          camber: { task: "Check camber tube for tightness", frequency: "weekly", redFlag: "Contact vendor if tube is loose" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Quickie Xenon2": {
-          folding: { task: "Check folding mechanism for smooth operation", frequency: "weekly", redFlag: "Contact vendor if mechanism sticks" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Invacare A4": {
-          camber: { task: "Check camber tube for tightness", frequency: "weekly", redFlag: "Contact vendor if tube is loose" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Motion Composites Helio C2": {
-          camber: { task: "Check camber tube for tightness", frequency: "weekly", redFlag: "Contact vendor if tube is loose" },
-          handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-          wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-          seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-          casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-          armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-          footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-          anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-          frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-          service: { task: "Complete inspection and service by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        // Power Assist Systems (HCPCS E0986)
-        "Yamaha NAVIONE": {
-          exterior: { task: "Visually check components for damage", frequency: "daily", redFlag: "Contact dealer if components are damaged" },
-          anti_tip: { task: "Ensure anti-tip bar is in correct position and locked", frequency: "daily", redFlag: "Contact dealer if anti-tip is loose" },
-          tires: { task: "Check rear tires for depth, cracks, and inflate (450 kPa)", frequency: "daily", redFlag: "Contact dealer if pressure drops significantly" },
-          brakes: { task: "Ensure parking brakes stop wheels and are secure", frequency: "daily", redFlag: "Contact dealer if brakes fail" },
-          wheels: { task: "Check wheels for deformation and broken spokes", frequency: "daily", redFlag: "Contact dealer if wheels are damaged" },
-          casters: { task: "Check caster tires and forks for cracks and wear", frequency: "daily", redFlag: "Contact dealer if casters are damaged" },
-          battery: { task: "Check battery residual capacity", frequency: "daily", redFlag: "Contact dealer if battery fails to charge" },
-          cleaning: { task: "Wipe down with damp towel and neutral detergent", frequency: "weekly", redFlag: "Avoid water hosing; contact dealer if damage occurs" },
-          service: { task: "Complete inspection by authorized dealer", frequency: "6 months", redFlag: "Schedule service if not done every 6 months" }
-        },
-        "Yamaha NAVIGO": {
-          exterior: { task: "Visually check components for damage", frequency: "daily", redFlag: "Contact dealer if components are damaged" },
-          anti_tip: { task: "Ensure anti-tip device is in correct position and locked", frequency: "daily", redFlag: "Contact dealer if anti-tip is loose" },
-          tires: { task: "Check rear tires for depth, cracks, and inflate (450 kPa for 24\", 345 kPa for 16\")", frequency: "daily", redFlag: "Contact dealer if pressure drops significantly" },
-          brakes: { task: "Ensure parking brakes stop wheels and are secure", frequency: "daily", redFlag: "Contact dealer if brakes fail" },
-          wheels: { task: "Check wheels for deformation and broken spokes", frequency: "daily", redFlag: "Contact dealer if wheels are damaged" },
-          casters: { task: "Check caster tires and forks for cracks and wear", frequency: "daily", redFlag: "Contact dealer if casters are damaged" },
-          battery: { task: "Check battery residual capacity", frequency: "daily", redFlag: "Contact dealer if battery fails to charge" },
-          cleaning: { task: "Wipe down with damp towel and neutral detergent", frequency: "weekly", redFlag: "Avoid water hosing; contact dealer if damage occurs" },
-          service: { task: "Complete inspection by authorized dealer", frequency: "6 months", redFlag: "Schedule service if not done every 6 months" }
-        },
-        "SmartDrive MX2+": {
-          inspection: { task: "Inspect SmartDrive, omni-wheel, and PushTracker for damage", frequency: "daily", redFlag: "Contact dealer if broken or cracked parts found" },
-          rollers: { task: "Check omni-drive wheel rollers for wear or flats", frequency: "weekly", redFlag: "Contact dealer if rollers are significantly worn" },
-          cables: { task: "Check cables for fraying or damage", frequency: "weekly", redFlag: "Contact dealer if cables are damaged" },
-          clamp: { task: "Ensure adaptive clamp is secure and not rotated", frequency: "weekly", redFlag: "Contact dealer if clamp is loose" },
-          motor: { task: "Check for abnormal motor activation/deactivation", frequency: "weekly", redFlag: "Contact dealer if motor issues occur (ERR: 008)" },
-          cleaning: { task: "Wipe down with damp wash rag", frequency: "monthly", redFlag: "Contact dealer if cleaning causes damage" },
-          firmware: { task: "Update firmware via app", frequency: "monthly", redFlag: "Contact dealer if firmware update fails" },
-          service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Alber e-motion M25": {
-          battery: { task: "Check battery residual capacity", frequency: "daily", redFlag: "Contact dealer if battery fails to charge" },
-          wheels: { task: "Check power assist wheels for damage", frequency: "daily", redFlag: "Contact dealer if wheels are damaged" },
-          cables: { task: "Check cables and connectors for damage", frequency: "weekly", redFlag: "Contact dealer if cables are fraying" },
-          clamp: { task: "Ensure mounting clamp is secure", frequency: "weekly", redFlag: "Contact dealer if clamp is loose" },
-          cleaning: { task: "Wipe down with damp cloth", frequency: "weekly", redFlag: "Avoid water hosing; contact dealer if damage occurs" },
-          service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        // Seating Systems (Cushions and Backrests, HCPCS E2601–E2608, E2611–E2617, E2620–E2625)
-        "Air Cushion (ROHO-like)": {
-          cover: { task: "Check cover for tears or wear; wash with mild detergent, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
-          air_cells: { task: "Check air cells for punctures; adjust inflation", frequency: "weekly", redFlag: "Contact vendor if punctures or leaks detected" },
-          valve: { task: "Ensure valve is closed and undamaged", frequency: "weekly", redFlag: "Contact vendor if valve is damaged or leaking" },
-          cleaning: { task: "Wipe air cells with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
-          service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Gel Cushion (JAY-like)": {
-          cover: { task: "Check cover for tears; machine wash warm (60°C/140°F), air dry", frequency: "monthly", redFlag: "Replace cover if torn or worn" },
-          fluid_pad: { task: "Inspect fluid pad for punctures or degradation", frequency: "monthly", redFlag: "Contact vendor if punctures or leaks detected" },
-          foam_base: { task: "Check foam base for consistency; wipe with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if foam is degraded" },
-          assembly: { task: "Ensure proper reassembly after cleaning", frequency: "monthly", redFlag: "Contact vendor if components do not align" },
-          service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Foam Cushion (Comfort-like)": {
-          cover: { task: "Check cover for tears; hand wash warm or machine wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
-          foam: { task: "Inspect foam for degradation; wipe with damp cloth, no submersion", frequency: "monthly", redFlag: "Replace foam if contaminated or degraded" },
-          cleaning: { task: "Clean cover with mild detergent; avoid harsh chemicals", frequency: "weekly", redFlag: "Contact vendor if cleaning causes damage" },
-          service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-        },
-        "Air/Foam Backrest (ROHO AGILITY-like)": {
-          cover: { task: "Check cover for tears; machine wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
-          air_insert: { task: "Check air inserts for punctures; adjust inflation", frequency: "weekly", redFlag: "Contact vendor if punctures or leaks detected" },
-          foam_pad: { task: "Inspect foam pad for degradation; wipe with damp cloth", frequency: "monthly", redFlag: "Contact vendor if foam is degraded" },
-          lumbar_support: { task: "Check lumbar support pad for wear; ensure secure attachment", frequency: "monthly", redFlag: "Contact vendor if pad is loose or damaged" },
-          cleaning: { task: "Wipe back shell with soap and water, air dry", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
-          service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
+        if (!equipmentSelect || !reminderList || !remindersDiv || !errorDiv) {
+          throw new Error("One or more DOM elements not found");
         }
-      };
 
-      const App = () => {
-        const [equipment, setEquipment] = React.useState({
-          equipmentType: "power",
-          equipmentModel: "",
-          cushion: "",
-          backrest: ""
+        const equipment = equipmentSelect.value;
+        if (!equipment || !MAINTENANCE_SCHEDULES[equipment]) {
+          errorDiv.textContent = "Please select a valid equipment type.";
+          errorDiv.style.display = "block";
+          remindersDiv.style.display = "none";
+          return;
+        }
+
+        errorDiv.style.display = "none";
+        reminderList.innerHTML = "";
+        const schedule = MAINTENANCE_SCHEDULES[equipment];
+        Object.entries(schedule).forEach(([component, { task, frequency, redFlag }]) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>Component:</strong> ${component}<br><strong>Task:</strong> ${task}<br><strong>Frequency:</strong> ${frequency}<br><strong>Red Flag:</strong> ${redFlag}`;
+          reminderList.appendChild(li);
         });
-        const [reminders, setReminders] = React.useState([]);
+        remindersDiv.style.display = "block";
 
-        const handleInputChange = (e) => {
-          const { name, value } = e.target;
-          setEquipment((prev) => ({ ...prev, [name]: value }));
-        };
-
-        const scheduleReminders = () => {
-          const selectedSchedule = MAINTENANCE_SCHEDULES[equipment.equipmentModel];
-          if (!selectedSchedule) {
-            alert("Please select a valid equipment model.");
-            return;
-          }
-
-          const newReminders = Object.entries(selectedSchedule).map(([component, { task, frequency, redFlag }]) => ({
-            component,
-            task,
-            frequency,
-            redFlag,
-            nextReminder: new Date().toLocaleDateString()
-          }));
-
-          setReminders(newReminders);
-
-          if (Notification.permission !== "granted") {
-            Notification.requestPermission();
-          }
-
-          newReminders.forEach((reminder) => {
-            if (Notification.permission === "granted") {
-              new Notification(`Reminder: ${reminder.task} for ${reminder.component}. ${reminder.redFlag}`);
+        if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
+          Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+              sendNotifications(schedule);
+            } else {
+              alert("Notifications are disabled. Please enable them in browser settings.");
             }
           });
+        } else if (Notification.permission === "granted") {
+          sendNotifications(schedule);
+        } else {
+          alert("This browser does not support notifications.");
+        }
+      } catch (error) {
+        console.error("Error setting reminders:", error);
+        const errorDiv = document.getElementById("error");
+        if (errorDiv) {
+          errorDiv.textContent = "An error occurred. Check the console for details.";
+          errorDiv.style.display = "block";
+        }
+      }
+    }
 
-          const icsContent = [
-            "BEGIN:VCALENDAR",
-            "VERSION:2.0",
-            ...newReminders.map((reminder) => [
-              "BEGIN:VEVENT",
-              `DTSTART:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
-              `SUMMARY:${reminder.task} for ${reminder.component}`,
-              `DESCRIPTION:${reminder.redFlag}`,
-              `RRULE:FREQ=${reminder.frequency.toUpperCase()}`,
-              "END:VEVENT"
-            ].join("\n")),
-            "END:VCALENDAR"
-          ].join("\n");
+    function sendNotifications(schedule) {
+      Object.entries(schedule).forEach(([component, { task, redFlag }]) => {
+        new Notification(`Reminder: ${task} for ${component}`, { body: redFlag });
+      });
+    }
 
-          const blob = new Blob([icsContent], { type: "text/calendar" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "reminder.ics";
-          link.click();
-          URL.revokeObjectURL(url);
-        };
-
-        const equipmentOptions = {
-          power: [
-            "Permobil F3 Corpus",
-            "Permobil M3 Corpus",
-            "Quickie QM-710",
-            "Quickie QM-715 HD",
-            "Invacare TDX SP2",
-            "Quantum Q6 Edge 3",
-            "Quantum 4Front"
-          ],
-          manual: [
-            "TiLite Aero T",
-            "TiLite TRA",
-            "TiLite Aero Z",
-            "TiLite ZRA",
-            "Quickie Nitrum",
-            "Quickie Xenon2",
-            "Invacare A4",
-            "Motion Composites Helio C2"
-          ],
-          power_assist: [
-            "Yamaha NAVIONE",
-            "Yamaha NAVIGO",
-            "SmartDrive MX2+",
-            "Alber e-motion M25"
-          ],
-          cushion: [
-            "Air Cushion (ROHO-like)",
-            "Gel Cushion (JAY-like)",
-            "Foam Cushion (Comfort-like)"
-          ],
-          backrest: [
-            "Air/Foam Backrest (ROHO AGILITY-like)"
-          ]
-        };
-
-        return (
-          <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
-            <h1 className="text-2xl font-bold mb-4">Wheelchair Maintenance Reminder</h1>
-            <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Equipment Type</label>
-                <select
-                  name="equipmentType"
-                  value={equipment.equipmentType}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                >
-                  <option value="power">Power Wheelchair</option>
-                  <option value="manual">Manual Wheelchair</option>
-                  <option value="power_assist">Power Assist System</option>
-                  <option value="cushion">Cushion</option>
-                  <option value="backrest">Backrest</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Equipment Model</label>
-                <select
-                  name="equipmentModel"
-                  value={equipment.equipmentModel}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                >
-                  <option value="">Select a model</option>
-                  {equipmentOptions[equipment.equipmentType].map((model) => (
-                    <option key={model} value={model}>{model}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Custom Cushion (Optional)</label>
-                <input
-                  type="text"
-                  name="cushion"
-                  value={equipment.cushion}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  placeholder="e.g., ROHO High Profile"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Custom Backrest (Optional)</label>
-                <input
-                  type="text"
-                  name="backrest"
-                  value={equipment.backrest}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  placeholder="e.g., JAY J3"
-                />
-              </div>
-              <button
-                onClick={scheduleReminders}
-                className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
-              >
-                Set Reminders
-              </button>
-            </div>
-            {reminders.length > 0 && (
-              <div className="mt-6 w-full max-w-md">
-                <h2 className="text-xl font-semibold mb-2">Scheduled Reminders</h2>
-                <ul className="bg-white p-4 rounded-lg shadow-md">
-                  {reminders.map((reminder, index) => (
-                    <li key={index} className="mb-2">
-                      <p><strong>Component:</strong> {reminder.component}</p>
-                      <p><strong>Task:</strong> {reminder.task}</p>
-                      <p><strong>Frequency:</strong> {reminder.frequency}</p>
-                      <p><strong>Red Flag:</strong> {reminder.redFlag}</p>
-                      <p><strong>Next
+    // Ensure DOM is fully loaded before adding event listeners
+    document.addEventListener("DOMContentLoaded", () => {
+      const button = document.querySelector(".button");
+      if (button) {
+        button.addEventListener("click", setReminders);
+      } else {
+        console.error("Button element not found");
+      }
+    });
+  </script>
+</body>
+</html>
