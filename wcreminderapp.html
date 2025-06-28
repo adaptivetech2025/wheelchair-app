@@ -330,4 +330,122 @@
       const equipmentOptions = {
         power: [
           "Permobil F3 Corpus",
-          "Permobil M3 Corpus
+          "Permobil M3 Corpus",
+          "Quickie QM-710",
+          "Quickie QM-715 HD",
+          "Invacare TDX SP2",
+          "Quantum Q6 Edge 3",
+          "Quantum 4Front"
+        ],
+        manual: [
+          "TiLite Aero T",
+          "TiLite TRA",
+          "TiLite Aero Z",
+          "TiLite ZRA",
+          "Quickie Nitrum",
+          "Quickie Xenon2",
+          "Invacare A4",
+          "Motion Composites Helio C2"
+        ],
+        power_assist: [
+          "Yamaha NAVIONE",
+          "Yamaha NAVIGO",
+          "SmartDrive MX2+",
+          "Alber e-motion M25"
+        ],
+        cushion: [
+          "Air Cushion (ROHO-like)",
+          "Gel Cushion (JAY-like)",
+          "Foam Cushion (Comfort-like)"
+        ],
+        backrest: [
+          "Air/Foam Backrest (ROHO AGILITY-like)"
+        ]
+      };
+
+      return (
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
+          <h1 className="text-2xl font-bold mb-4">Wheelchair Maintenance Reminder</h1>
+          <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Equipment Type</label>
+              <select
+                name="equipmentType"
+                value={equipment.equipmentType}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="power">Power Wheelchair</option>
+                <option value="manual">Manual Wheelchair</option>
+                <option value="power_assist">Power Assist System</option>
+                <option value="cushion">Cushion</option>
+                <option value="backrest">Backrest</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Equipment Model</label>
+              <select
+                name="equipmentModel"
+                value={equipment.equipmentModel}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="">Select a model</option>
+                {equipmentOptions[equipment.equipmentType].map((model) => (
+                  <option key={model} value={model}>{model}</option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Custom Cushion (Optional)</label>
+              <input
+                type="text"
+                name="cushion"
+                value={equipment.cushion}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                placeholder="e.g., ROHO High Profile"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Custom Backrest (Optional)</label>
+              <input
+                type="text"
+                name="backrest"
+                value={equipment.backrest}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                placeholder="e.g., JAY J3"
+              />
+            </div>
+            <button
+              onClick={scheduleReminders}
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+            >
+              Set Reminders
+            </button>
+          </div>
+          {reminders.length > 0 && (
+            <div className="mt-6 w-full max-w-md">
+              <h2 className="text-xl font-semibold mb-2">Scheduled Reminders</h2>
+              <ul className="bg-white p-4 rounded-lg shadow-md">
+                {reminders.map((reminder, index) => (
+                  <li key={index} className="mb-2">
+                    <p><strong>Component:</strong> {reminder.component}</p>
+                    <p><strong>Task:</strong> {reminder.task}</p>
+                    <p><strong>Frequency:</strong> {reminder.frequency}</p>
+                    <p><strong>Red Flag:</strong> {reminder.redFlag}</p>
+                    <p><strong>Next Reminder:</strong> {reminder.nextReminder}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+</html>
