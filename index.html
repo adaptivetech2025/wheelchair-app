@@ -55,27 +55,6 @@
       </div>
       <div class="since-date" id="since-date"></div>
     </div>
-    <div id="confirmation-card" class="card hidden">
-      <h2>Confirm Your Selections</h2>
-      <div class="section">
-        <h3>Mobility Base</h3>
-        <ul id="mobility-base-list"></ul>
-      </div>
-      <div class="section">
-        <h3>Backrest Cushion</h3>
-        <ul id="backrest-list"></ul>
-      </div>
-      <div class="section">
-        <h3>Seat Cushion</h3>
-        <ul id="seat-list"></ul>
-      </div>
-      <div class="nav-buttons">
-        <button id="back-button" class="button">Back</button>
-        <button id="submit-final" class="button">Submit</button>
-        <button id="return-to-home" class="button">Return to Home</button>
-      </div>
-      <div class="since-date" id="since-date"></div>
-    </div>
     <div id="profile-card" class="card">
       <h2>My Mobility Equipment</h2>
       <ul id="profile-list"></ul>
@@ -83,7 +62,6 @@
       <div class="profile-link" onclick="editProfile()">Edit My Mobility Equipment Profile</div>
       <div class="nav-buttons">
         <button id="back-button" class="button hidden">Back</button>
-        <button id="next-to-edit" class="button">Edit</button>
         <button id="return-to-home" class="button hidden">Return to Home</button>
       </div>
       <button id="turn-off-reminders-profile" class="turn-off-button">Turn Off My Reminders</button>
@@ -294,30 +272,8 @@
         localStorage.setItem("backrestCount", JSON.stringify(backrestCount));
         localStorage.setItem("seatCount", JSON.stringify(seatCount));
 
-        const mobilityBaseList = document.getElementById("mobility-base-list");
-        const backrestList = document.getElementById("backrest-list");
-        const seatList = document.getElementById("seat-list");
-        [mobilityBaseList, backrestList, seatList].forEach(list => list.innerHTML = "");
-
-        selectedComponents.forEach(component => {
-          const label = MAINTENANCE_SCHEDULES[component].label;
-          if (["Rigid Ultra-Light Manual Wheelchair", "Folding Ultra-Light Manual Wheelchair", "Power Wheelchair with Power Seating Functions", "Power Wheelchair without Power Seating Functions", "Hand-Rim Activated Power Assist", "Detachable Power Assist"].includes(component)) {
-            const li = document.createElement("li");
-            li.textContent = label;
-            mobilityBaseList.appendChild(li);
-          } else if (component.includes("Backrest")) {
-            const li = document.createElement("li");
-            li.textContent = label;
-            backrestList.appendChild(li);
-          } else if (component.includes("Seat")) {
-            const li = document.createElement("li");
-            li.textContent = label;
-            seatList.appendChild(li);
-          }
-        });
-
-        document.getElementById("contact-card").classList.add("hidden");
-        document.getElementById("confirmation-card").classList.remove("hidden");
+        document.getElementById("selection-card").classList.add("hidden");
+        document.getElementById("contact-card").classList.remove("hidden");
         if (profileId) {
           localStorage.setItem(`profile_${profileId}`, JSON.stringify(selectedComponents));
           reminderCount++;
@@ -326,7 +282,7 @@
         }
       } catch (error) {
         console.error("Error showing confirmation:", error);
-        document.getElementById("error").textContent = "An error occurred. Check the console for details.";
+        document.getElementById("error").textContent = `An error occurred. Check the console for details: ${error.message}`;
         document.getElementById("error").style.display = "block";
       }
     }
@@ -349,13 +305,13 @@
         }
         document.getElementById("selection-card").classList.add("hidden");
         document.getElementById("contact-card").classList.add("hidden");
-        document.getElementById("confirmation-card").classList.remove("hidden");
+        document.getElementById("reminders").classList.remove("hidden");
         if (profileId) {
           localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
         }
       } catch (error) {
         console.error("Error submitting contact:", error);
-        document.getElementById("error").textContent = "An error occurred. Check the console for details.";
+        document.getElementById("error").textContent = `An error occurred. Check the console for details: ${error.message}`;
         document.getElementById("error").style.display = "block";
       }
     }
@@ -379,7 +335,6 @@
           });
         });
 
-        document.getElementById("confirmation-card").classList.add("hidden");
         document.getElementById("reminders").classList.remove("hidden");
 
         if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
@@ -397,7 +352,7 @@
         }
       } catch (error) {
         console.error("Error submitting reminders:", error);
-        document.getElementById("error").textContent = "An error occurred. Check the console for details.";
+        document.getElementById("error").textContent = `An error occurred. Check the console for details: ${error.message}`;
         document.getElementById("error").style.display = "block";
       }
     }
@@ -428,7 +383,6 @@
         document.getElementById("disable-count").textContent = disableCount;
         alert("Reminders have been turned off. Refresh the page to confirm.");
         document.getElementById("reminders").classList.add("hidden");
-        document.getElementById("confirmation-card").classList.add("hidden");
         document.getElementById("contact-card").classList.add("hidden");
         document.getElementById("selection-card").classList.remove("hidden");
         navigationHistory = ["selection-card"];
@@ -441,7 +395,7 @@
       if (navigationHistory.length > 1) {
         navigationHistory.pop(); // Remove current page
         const previousCard = navigationHistory.pop(); // Get previous page
-        const cards = ["selection-card", "contact-card", "confirmation-card", "profile-card", "reminders"];
+        const cards = ["selection-card", "contact-card", "reminders", "profile-card"];
         cards.forEach(card => document.getElementById(card).classList.add("hidden"));
         document.getElementById(previousCard).classList.remove("hidden");
         navigationHistory.push(previousCard); // Re-add previous page to history
@@ -450,7 +404,7 @@
     }
 
     function goHome() {
-      const cards = ["selection-card", "contact-card", "confirmation-card", "reminders"];
+      const cards = ["selection-card", "contact-card", "reminders"];
       cards.forEach(card => document.getElementById(card).classList.add("hidden"));
       document.getElementById("profile-card").classList.remove("hidden");
       navigationHistory = ["profile-card"];
@@ -458,7 +412,7 @@
     }
 
     function updateNavButtons() {
-      const currentCard = ["selection-card", "contact-card", "confirmation-card", "profile-card", "reminders"].find(card => !document.getElementById(card).classList.contains("hidden"));
+      const currentCard = ["selection-card", "contact-card", "reminders", "profile-card"].find(card => !document.getElementById(card).classList.contains("hidden"));
       document.querySelectorAll("#back-button").forEach(btn => btn.classList.toggle("hidden", navigationHistory.length <= 1));
       document.querySelectorAll("#return-to-home, #return-to-home-reminders").forEach(btn => btn.classList.remove("hidden"));
     }
@@ -493,17 +447,15 @@
       const backButtons = document.querySelectorAll("#back-button");
       const returnToHome = document.getElementById("return-to-home");
       const returnToHomeReminders = document.getElementById("return-to-home-reminders");
-      const nextToConfirm = document.getElementById("next-to-confirm");
 
       backButtons.forEach(btn => btn.addEventListener("click", goBack));
       if (returnToHome) returnToHome.addEventListener("click", goHome);
       if (returnToHomeReminders) returnToHomeReminders.addEventListener("click", goHome);
       if (nextToContact) nextToContact.addEventListener("click", () => { showConfirmation(); navigationHistory.push("contact-card"); updateNavButtons(); });
-      if (submitContact) submitContact.addEventListener("click", () => { submitContact(); navigationHistory.push("confirmation-card"); updateNavButtons(); });
+      if (submitContact) submitContact.addEventListener("click", () => { submitContact(); navigationHistory.push("reminders"); updateNavButtons(); });
       if (submitFinal) submitFinal.addEventListener("click", () => { submitReminders(); navigationHistory.push("reminders"); updateNavButtons(); });
       if (turnOffRemindersBtn) turnOffRemindersBtn.addEventListener("click", turnOffReminders);
       if (turnOffRemindersProfileBtn) turnOffRemindersProfileBtn.addEventListener("click", turnOffReminders);
-      if (nextToConfirm) nextToConfirm.addEventListener("click", showConfirmation);
     });
   </script>
 </body>
