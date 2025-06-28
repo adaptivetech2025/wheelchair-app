@@ -10,204 +10,500 @@
   <meta name="apple-mobile-web-app-title" content="Wheelchair Reminder">
 </head>
 <body>
+  <button class="admin-login" onclick="adminLogin()">Admin Login</button>
   <div class="container">
     <h1>Wheelchair Maintenance Reminder</h1>
-    <div class="card">
-      <div class="mb-4">
-        <label class="label">Equipment Type</label>
-        <select id="equipment" class="select">
-          <option value="">Select equipment</option>
-          <option value="Rigid Ultra-Light Manual Wheelchair">Rigid Ultra-Light Manual Wheelchair</option>
-          <option value="Folding Ultra-Light Manual Wheelchair">Folding Ultra-Light Manual Wheelchair</option>
-          <option value="Hand-Rim Activated Power Assist">Hand-Rim Activated Power Assist</option>
-          <option value="Detachable Power Assist">Detachable Power Assist</option>
-          <option value="Power Wheelchair with Power Seating Functions">Power Wheelchair with Power Seating Functions</option>
-          <option value="Power Wheelchair without Power Seating Functions">Power Wheelchair without Power Seating Functions</option>
-          <option value="Air Backrest Cushion">Air Backrest Cushion</option>
-          <option value="Foam Backrest Cushion">Foam Backrest Cushion</option>
-          <option value="Foam Seat Cushion">Foam Seat Cushion</option>
-          <option value="Gel Seat Cushion">Gel Seat Cushion</option>
-          <option value="Air Seat Cushion">Air Seat Cushion</option>
-        </select>
+    <div id="selection-card" class="card">
+      <div class="selection-container">
+        <table>
+          <tr><th colspan="2" class="label">Select Primary Equipment (Required)</th></tr>
+          <tr><td colspan="2"><select id="primary-equipment" class="select" required><option value="">Select one</option><option value="Rigid Ultra-Light Manual Wheelchair">Rigid Ultra-Light Manual Wheelchair</option><option value="Folding Ultra-Light Manual Wheelchair">Folding Ultra-Light Manual Wheelchair</option><option value="Power Wheelchair with Power Seating Functions">Power Wheelchair with Power Seating Functions</option><option value="Power Wheelchair without Power Seating Functions">Power Wheelchair without Power Seating Functions</option></select></td></tr>
+          <tr><th colspan="2" class="label">Optional Power Assist (Select one or both)</th></tr>
+          <tr><td><label><input type="checkbox" id="detachable-power-assist" value="Detachable Power Assist"> Detachable Power Assist</label></td><td><label><input type="checkbox" id="hand-rim-power-assist" value="Hand-Rim Activated Power Assist"> Hand-Rim Activated Power Assist</label></td></tr>
+          <tr><th colspan="2" class="label">Select Seat Cushion(s) (One or more)</th></tr>
+          <tr><td><label><input type="checkbox" id="air-seat" value="Air Seat Cushion"> Air Seat Cushion</label></td><td><label><input type="checkbox" id="foam-seat" value="Foam Seat Cushion"> Foam Seat Cushion</label></td></tr>
+          <tr><td><label><input type="checkbox" id="gel-seat" value="Gel Seat Cushion"> Gel Seat Cushion</label></td><td></td></tr>
+          <tr><th colspan="2" class="label">Select Backrest Cushion(s) (One or more)</th></tr>
+          <tr><td><label><input type="checkbox" id="air-backrest" value="Air Backrest Cushion"> Air Backrest Cushion</label></td><td><label><input type="checkbox" id="foam-backrest" value="Foam Backrest Cushion"> Foam Backrest Cushion</label></td></tr>
+          <tr><td><label><input type="checkbox" id="gel-backrest" value="Gel Backrest Cushion"> Gel Backrest Cushion</label></td><td></td></tr>
+        </table>
       </div>
-      <button class="button" onclick="setReminders()">Set Reminders</button>
+      <div class="nav-buttons">
+        <button id="back-button" class="button hidden">Back</button>
+        <button id="next-to-contact" class="button">Next: Enter Contact Info</button>
+        <button id="return-to-home" class="button">Return to Home</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
     </div>
-    <div id="reminders" class="reminders" style="display: none;">
+    <div id="contact-card" class="card hidden">
+      <h2>Contact Information</h2>
+      <form id="contact-form">
+        <div class="label">Wheelchair Vendor</div>
+        <input type="text" id="vendor-company" placeholder="Company Name" required>
+        <input type="text" id="vendor-rep" placeholder="Representative Name" required>
+        <input type="tel" id="vendor-phone" placeholder="Phone Number" required>
+        <div class="label">Clinical Therapist</div>
+        <input type="text" id="therapist-hospital" placeholder="Hospital/Clinic Name" required>
+        <input type="text" id="therapist-name" placeholder="Therapist Name" required>
+        <input type="tel" id="therapist-phone" placeholder="Phone Number" required>
+        <input type="email" id="therapist-email" placeholder="Email" required>
+      </form>
+      <div class="nav-buttons">
+        <button id="back-button" class="button">Back</button>
+        <button id="submit-contact" class="button">Submit</button>
+        <button id="return-to-home" class="button">Return to Home</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="confirmation-card" class="card hidden">
+      <h2>Confirm Your Selections</h2>
+      <div class="section">
+        <h3>Mobility Base</h3>
+        <ul id="mobility-base-list"></ul>
+      </div>
+      <div class="section">
+        <h3>Backrest Cushion</h3>
+        <ul id="backrest-list"></ul>
+      </div>
+      <div class="section">
+        <h3>Seat Cushion</h3>
+        <ul id="seat-list"></ul>
+      </div>
+      <div class="nav-buttons">
+        <button id="back-button" class="button">Back</button>
+        <button id="submit-final" class="button">Submit</button>
+        <button id="return-to-home" class="button">Return to Home</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="profile-card" class="card">
+      <h2>My Mobility Equipment</h2>
+      <ul id="profile-list"></ul>
+      <div class="profile-link" onclick="editContacts()">Edit Contact Information</div>
+      <div class="profile-link" onclick="editProfile()">Edit My Mobility Equipment Profile</div>
+      <div class="nav-buttons">
+        <button id="back-button" class="button hidden">Back</button>
+        <button id="next-to-edit" class="button">Edit</button>
+        <button id="return-to-home" class="button hidden">Return to Home</button>
+      </div>
+      <button id="turn-off-reminders-profile" class="turn-off-button">Turn Off My Reminders</button>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="reminders" class="reminders hidden">
       <h2>Scheduled Reminders</h2>
       <ul id="reminder-list"></ul>
+      <div class="nav-buttons">
+        <button id="back-button" class="button">Back</button>
+        <button id="return-to-home-reminders" class="button">Return to Home</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="admin-data" class="hidden">
+      <h3>Admin Statistics</h3>
+      <p>Mobility Base: <span id="mobility-base-count"></span></p>
+      <p>Backrest Cushion: <span id="backrest-count"></span></p>
+      <p>Seat Cushion: <span id="seat-count"></span></p>
+      <p>Total Users: <span id="user-count">0</span></p>
+      <p>Users with Reminders: <span id="reminder-count">0</span></p>
+      <p>Users with Reminders Disabled: <span id="disable-count">0</span></p>
     </div>
     <div id="error" class="error" style="display: none;"></div>
   </div>
   <script>
     const MAINTENANCE_SCHEDULES = {
-      "Rigid Ultra-Light Manual Wheelchair": {
-        camber: { task: "Check camber plug clamps and axle sleeves for tightness", frequency: "weekly", redFlag: "Contact vendor if clamps or sleeves are loose" },
-        handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-        wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-        seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-        casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-        armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-        footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-        anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-        frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Folding Ultra-Light Manual Wheelchair": {
-        folding: { task: "Check folding mechanism for smooth operation", frequency: "weekly", redFlag: "Contact vendor if mechanism sticks" },
-        handrims: { task: "Inspect handrims for rough edges or peeling", frequency: "3 months", redFlag: "Contact vendor if handrims are damaged" },
-        wheel_locks: { task: "Ensure wheel locks prevent movement", frequency: "weekly", redFlag: "Contact vendor if locks fail to engage" },
-        seat_sling: { task: "Inspect seat sling for rips or sagging", frequency: "weekly", redFlag: "Replace sling if torn or sagging" },
-        casters: { task: "Inspect caster wheels and forks for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if casters are damaged" },
-        armrests: { task: "Ensure armrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if armrests are loose" },
-        footrests: { task: "Ensure footrest hardware is securely attached", frequency: "weekly", redFlag: "Contact vendor if footrests are loose" },
-        anti_tips: { task: "Inspect anti-tip wheels for cracks and wear", frequency: "weekly", redFlag: "Contact vendor if anti-tips are damaged" },
-        frame: { task: "Inspect frame for cracks", frequency: "3 months", redFlag: "Contact vendor if cracks detected" },
-        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Hand-Rim Activated Power Assist": {
-        exterior: { task: "Visually check components for damage", frequency: "daily", redFlag: "Contact dealer if components are damaged" },
-        anti_tip: { task: "Ensure anti-tip device is in correct position and locked", frequency: "daily", redFlag: "Contact dealer if anti-tip is loose" },
-        tires: { task: "Check tires for depth, cracks, and inflate (e.g., 450 kPa)", frequency: "daily", redFlag: "Contact dealer if pressure drops significantly" },
-        brakes: { task: "Ensure parking brakes stop wheels and are secure", frequency: "daily", redFlag: "Contact dealer if brakes fail" },
-        wheels: { task: "Check wheels for deformation and broken spokes", frequency: "daily", redFlag: "Contact dealer if wheels are damaged" },
-        casters: { task: "Check caster tires and forks for cracks and wear", frequency: "daily", redFlag: "Contact dealer if casters are damaged" },
-        battery: { task: "Check battery residual capacity", frequency: "daily", redFlag: "Contact dealer if battery fails to charge" },
-        cleaning: { task: "Wipe down with damp towel and neutral detergent", frequency: "weekly", redFlag: "Avoid water hosing; contact dealer if damage occurs" },
-        service: { task: "Complete inspection by authorized dealer", frequency: "6 months", redFlag: "Schedule service if not done every 6 months" }
-      },
-      "Detachable Power Assist": {
-        inspection: { task: "Inspect components for damage", frequency: "daily", redFlag: "Contact dealer if broken or cracked parts found" },
-        rollers: { task: "Check rollers for wear or flats", frequency: "weekly", redFlag: "Contact dealer if rollers are significantly worn" },
-        cables: { task: "Check cables for fraying or damage", frequency: "weekly", redFlag: "Contact dealer if cables are damaged" },
-        clamp: { task: "Ensure clamp is secure and not rotated", frequency: "weekly", redFlag: "Contact dealer if clamp is loose" },
-        motor: { task: "Check for abnormal motor activation/deactivation", frequency: "weekly", redFlag: "Contact dealer if motor issues occur" },
-        cleaning: { task: "Wipe down with damp cloth", frequency: "monthly", redFlag: "Contact dealer if cleaning causes damage" },
-        firmware: { task: "Update firmware via app", frequency: "monthly", redFlag: "Contact dealer if firmware update fails" },
-        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Power Wheelchair with Power Seating Functions": {
-        battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-        joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-        parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-        belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (30–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops significantly" },
-        seating_functions: { task: "Test power seating functions (e.g., iLevel, tilt)", frequency: "weekly", redFlag: "Contact vendor if functions fail" },
-        upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-        seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Power Wheelchair without Power Seating Functions": {
-        battery: { task: "Check battery level and charge if necessary", frequency: "daily", redFlag: "Contact vendor if battery fails to charge" },
-        joystick: { task: "Check joystick panel for damage", frequency: "daily", redFlag: "Contact vendor if joystick is unresponsive" },
-        parts: { task: "Ensure all removable parts are securely fastened", frequency: "daily", redFlag: "Contact vendor if parts are loose" },
-        belts: { task: "Check positioning belts for wear and buckle functionality", frequency: "daily", redFlag: "Replace belts if worn or buckles fail" },
-        tires: { task: "Check tires and inflate (30–45 psi)", frequency: "weekly", redFlag: "Contact vendor if pressure drops significantly" },
-        motors: { task: "Listen for unusual motor noises", frequency: "weekly", redFlag: "Contact vendor if noises persist" },
-        upholstery: { task: "Clean wheelchair and upholstery", frequency: "monthly", redFlag: "Replace upholstery if torn" },
-        seating: { task: "Check seating and supports for wear", frequency: "monthly", redFlag: "Contact vendor if supports are damaged" },
-        service: { task: "Complete inspection by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Air Backrest Cushion": {
-        cover: { task: "Check cover for tears; machine wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
-        air_insert: { task: "Check air inserts for punctures; adjust inflation", frequency: "weekly", redFlag: "Contact vendor if punctures or leaks detected" },
-        cleaning: { task: "Wipe with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
-        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Foam Backrest Cushion": {
-        cover: { task: "Check cover for tears; machine wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
-        foam_pad: { task: "Inspect foam pad for degradation", frequency: "monthly", redFlag: "Contact vendor if foam is degraded" },
-        lumbar_support: { task: "Check lumbar support for wear; ensure secure attachment", frequency: "monthly", redFlag: "Contact vendor if pad is loose or damaged" },
-        cleaning: { task: "Wipe with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
-        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Foam Seat Cushion": {
-        cover: { task: "Check cover for tears; hand wash warm, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
-        foam: { task: "Inspect foam for degradation", frequency: "monthly", redFlag: "Replace foam if contaminated or degraded" },
-        cleaning: { task: "Clean cover with mild detergent", frequency: "weekly", redFlag: "Contact vendor if cleaning causes damage" },
-        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Gel Seat Cushion": {
-        cover: { task: "Check cover for tears; machine wash warm, air dry", frequency: "monthly", redFlag: "Replace cover if torn or worn" },
-        fluid_pad: { task: "Inspect fluid pad for punctures or degradation", frequency: "monthly", redFlag: "Contact vendor if punctures or leaks detected" },
-        foam_base: { task: "Check foam base for consistency", frequency: "monthly", redFlag: "Contact vendor if foam is degraded" },
-        assembly: { task: "Ensure proper reassembly after cleaning", frequency: "monthly", redFlag: "Contact vendor if components do not align" },
-        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      },
-      "Air Seat Cushion": {
-        cover: { task: "Check cover for tears; wash with mild detergent, air dry", frequency: "weekly", redFlag: "Replace cover if torn or worn" },
-        air_cells: { task: "Check air cells for punctures; adjust inflation", frequency: "weekly", redFlag: "Contact vendor if punctures or leaks detected" },
-        valve: { task: "Ensure valve is closed and undamaged", frequency: "weekly", redFlag: "Contact vendor if valve is damaged or leaking" },
-        cleaning: { task: "Wipe air cells with damp cloth, no submersion", frequency: "monthly", redFlag: "Contact vendor if cleaning causes damage" },
-        service: { task: "Inspect by authorized dealer", frequency: "yearly", redFlag: "Schedule service if not done annually" }
-      }
+      "Rigid Ultra-Light Manual Wheelchair": { label: "Rigid Ultra-Light Manual Wheelchair", task: "Check camber plug clamps", redFlag: "Contact vendor if loose" },
+      "Folding Ultra-Light Manual Wheelchair": { label: "Folding Ultra-Light Manual Wheelchair", task: "Check folding mechanism", redFlag: "Contact vendor if sticks" },
+      "Hand-Rim Activated Power Assist": { label: "Hand-Rim Activated Power Assist", task: "Check battery capacity", redFlag: "Contact dealer if fails" },
+      "Detachable Power Assist": { label: "Detachable Power Assist", task: "Inspect components", redFlag: "Contact dealer if damaged" },
+      "Power Wheelchair with Power Seating Functions": { label: "Power Wheelchair with Power Seating Functions", task: "Check battery level", redFlag: "Contact vendor if fails" },
+      "Power Wheelchair without Power Seating Functions": { label: "Power Wheelchair without Power Seating Functions", task: "Check tires", redFlag: "Contact vendor if pressure drops" },
+      "Air Backrest Cushion": { label: "Air Backrest Cushion", task: "Check air inserts", redFlag: "Contact vendor if leaks" },
+      "Foam Backrest Cushion": { label: "Foam Backrest Cushion", task: "Inspect foam pad", redFlag: "Contact vendor if degraded" },
+      "Gel Backrest Cushion": { label: "Gel Backrest Cushion", task: "Inspect gel pad", redFlag: "Contact vendor if degraded" },
+      "Air Seat Cushion": { label: "Air Seat Cushion", task: "Check air cells", redFlag: "Contact vendor if punctures" },
+      "Foam Seat Cushion": { label: "Foam Seat Cushion", task: "Inspect foam", redFlag: "Contact vendor if degraded" },
+      "Gel Seat Cushion": { label: "Gel Seat Cushion", task: "Inspect fluid pad", redFlag: "Contact vendor if leaks" }
     };
 
-    function setReminders() {
-      try {
-        const equipmentSelect = document.getElementById("equipment");
-        const reminderList = document.getElementById("reminder-list");
-        const remindersDiv = document.getElementById("reminders");
-        const errorDiv = document.getElementById("error");
+    let selectedComponents = [];
+    let profileId = localStorage.getItem("profileId");
+    let contacts = { vendor: {}, therapist: {} };
+    let userCount = parseInt(localStorage.getItem("userCount") || "0");
+    let reminderCount = parseInt(localStorage.getItem("reminderCount") || "0");
+    let disableCount = parseInt(localStorage.getItem("disableCount") || "0");
+    let mobilityBaseCount = JSON.parse(localStorage.getItem("mobilityBaseCount") || '{"n/a": 0, "Rigid Ultra-Light Manual Wheelchair": 0, "Folding Ultra-Light Manual Wheelchair": 0, "Power Wheelchair with Power Seating Functions": 0, "Power Wheelchair without Power Seating Functions": 0, "Hand-Rim Activated Power Assist": 0, "Detachable Power Assist": 0}');
+    let backrestCount = JSON.parse(localStorage.getItem("backrestCount") || '{"n/a": 0, "Air Backrest Cushion": 0, "Foam Backrest Cushion": 0, "Gel Backrest Cushion": 0}');
+    let seatCount = JSON.parse(localStorage.getItem("seatCount") || '{"n/a": 0, "Air Seat Cushion": 0, "Foam Seat Cushion": 0, "Gel Seat Cushion": 0}');
+    let startDate = localStorage.getItem(`startDate_${profileId}`) || new Date().toLocaleDateString();
+    let navigationHistory = [];
 
-        if (!equipmentSelect || !reminderList || !remindersDiv || !errorDiv) {
-          throw new Error("One or more DOM elements not found");
+    // Initialize or load profile using IP address and update counters
+    async function initializeProfile() {
+      if (!profileId) {
+        try {
+          const response = await fetch("https://api.ipify.org?format=json");
+          const data = await response.json();
+          profileId = data.ip;
+          localStorage.setItem("profileId", profileId);
+          userCount++;
+          localStorage.setItem("userCount", userCount);
+          document.getElementById("user-count").textContent = userCount;
+          localStorage.setItem(`startDate_${profileId}`, startDate);
+        } catch (error) {
+          console.error("Failed to fetch IP:", error);
+          profileId = "default-" + Date.now();
+          localStorage.setItem("profileId", profileId);
+          userCount++;
+          localStorage.setItem("userCount", userCount);
+          document.getElementById("user-count").textContent = userCount;
+          localStorage.setItem(`startDate_${profileId}`, startDate);
         }
+        localStorage.setItem(`profile_${profileId}`, JSON.stringify([]));
+        localStorage.setItem(`contacts_${profileId}`, JSON.stringify({ vendor: {}, therapist: {} }));
+      }
+      loadProfile();
+      updateAdminStats();
+      updateSinceDate();
+    }
 
-        const equipment = equipmentSelect.value;
-        if (!equipment || !MAINTENANCE_SCHEDULES[equipment]) {
-          errorDiv.textContent = "Please select a valid equipment type.";
-          errorDiv.style.display = "block";
-          remindersDiv.style.display = "none";
-          return;
+    function updateSinceDate() {
+      const sinceDateElements = document.querySelectorAll("#since-date");
+      sinceDateElements.forEach(el => el.textContent = `Maintaining my equipment since ${startDate}`);
+    }
+
+    function loadProfile() {
+      if (profileId) {
+        const savedComponents = JSON.parse(localStorage.getItem(`profile_${profileId}`) || "[]");
+        const savedContacts = JSON.parse(localStorage.getItem(`contacts_${profileId}`) || "{}");
+        contacts = savedContacts;
+        selectedComponents = savedComponents;
+        if (savedComponents.length > 0) {
+          document.getElementById("selection-card").classList.add("hidden");
+          document.getElementById("contact-card").classList.add("hidden");
+          document.getElementById("confirmation-card").classList.add("hidden");
+          document.getElementById("reminders").classList.add("hidden");
+          document.getElementById("profile-card").classList.remove("hidden");
+          const profileList = document.getElementById("profile-list");
+          profileList.innerHTML = savedComponents.map(comp => `<li>${MAINTENANCE_SCHEDULES[comp].label}</li>`).join("");
+          updateReminderList();
+          updateContactDisplay();
+          navigationHistory = ["profile-card"];
+        } else {
+          navigationHistory = ["selection-card"];
         }
+        updateNavButtons();
+      }
+    }
 
-        errorDiv.style.display = "none";
-        reminderList.innerHTML = "";
-        const schedule = MAINTENANCE_SCHEDULES[equipment];
-        Object.entries(schedule).forEach(([component, { task, frequency, redFlag }]) => {
-          const li = document.createElement("li");
-          li.innerHTML = `<strong>Component:</strong> ${component}<br><strong>Task:</strong> ${task}<br><strong>Frequency:</strong> ${frequency}<br><strong>Red Flag:</strong> ${redFlag}`;
-          reminderList.appendChild(li);
+    function updateContactDisplay() {
+      if (contacts.vendor.company) {
+        document.getElementById("profile-list").innerHTML += `<li>Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}</li>`;
+      }
+      if (contacts.therapist.name) {
+        document.getElementById("profile-list").innerHTML += `<li>Therapist: ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email} (${contacts.therapist.hospital})</li>`;
+      }
+    }
+
+    function editProfile() {
+      document.getElementById("profile-card").classList.add("hidden");
+      document.getElementById("selection-card").classList.remove("hidden");
+      navigationHistory.push("selection-card");
+      selectedComponents = JSON.parse(localStorage.getItem(`profile_${profileId}`) || "[]");
+      if (selectedComponents.length > 0) {
+        document.getElementById("primary-equipment").value = selectedComponents.find(comp => Object.keys(MAINTENANCE_SCHEDULES).includes(comp));
+        ["detachable-power-assist", "hand-rim-power-assist", "air-seat", "foam-seat", "gel-seat", "air-backrest", "foam-backrest", "gel-backrest"].forEach(id => {
+          document.getElementById(id).checked = selectedComponents.includes(MAINTENANCE_SCHEDULES[id.replace("-", " ")].label);
         });
-        remindersDiv.style.display = "block";
+      }
+      updateNavButtons();
+      localStorage.setItem(`profile_${profileId}`, JSON.stringify(selectedComponents));
+    }
+
+    function editContacts() {
+      document.getElementById("profile-card").classList.add("hidden");
+      document.getElementById("contact-card").classList.remove("hidden");
+      navigationHistory.push("contact-card");
+      const savedContacts = JSON.parse(localStorage.getItem(`contacts_${profileId}`) || "{}");
+      if (savedContacts.vendor.company) {
+        document.getElementById("vendor-company").value = savedContacts.vendor.company;
+        document.getElementById("vendor-rep").value = savedContacts.vendor.rep;
+        document.getElementById("vendor-phone").value = savedContacts.vendor.phone;
+      }
+      if (savedContacts.therapist.name) {
+        document.getElementById("therapist-hospital").value = savedContacts.therapist.hospital;
+        document.getElementById("therapist-name").value = savedContacts.therapist.name;
+        document.getElementById("therapist-phone").value = savedContacts.therapist.phone;
+        document.getElementById("therapist-email").value = savedContacts.therapist.email;
+      }
+      updateNavButtons();
+      localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
+    }
+
+    function updateReminderList() {
+      const reminderList = document.getElementById("reminder-list");
+      reminderList.innerHTML = "";
+      selectedComponents.forEach(component => {
+        const schedule = MAINTENANCE_SCHEDULES[component];
+        Object.entries(MAINTENANCE_SCHEDULES).forEach(([key, { label }]) => {
+          if (key === component) {
+            const li = document.createElement("li");
+            li.textContent = `Reminder set for ${label}`;
+            reminderList.appendChild(li);
+          }
+        });
+      });
+    }
+
+    function showConfirmation() {
+      try {
+        const primaryEquipment = document.getElementById("primary-equipment").value;
+        if (!primaryEquipment || !MAINTENANCE_SCHEDULES[primaryEquipment]) {
+          throw new Error("Please select a primary equipment type.");
+        }
+
+        const detachablePowerAssist = document.getElementById("detachable-power-assist").checked ? "Detachable Power Assist" : null;
+        const handRimPowerAssist = document.getElementById("hand-rim-power-assist").checked ? "Hand-Rim Activated Power Assist" : null;
+        const seatCushions = [];
+        ["air-seat", "foam-seat", "gel-seat"].forEach(id => {
+          if (document.getElementById(id).checked) seatCushions.push(document.getElementById(id).value);
+        });
+        const backrestCushions = [];
+        ["air-backrest", "foam-backrest", "gel-backrest"].forEach(id => {
+          if (document.getElementById(id).checked) backrestCushions.push(document.getElementById(id).value);
+        });
+
+        selectedComponents = [primaryEquipment];
+        if (detachablePowerAssist) selectedComponents.push(detachablePowerAssist);
+        if (handRimPowerAssist) selectedComponents.push(handRimPowerAssist);
+        selectedComponents = selectedComponents.concat(seatCushions, backrestCushions);
+
+        // Update category counts
+        Object.keys(mobilityBaseCount).forEach(key => mobilityBaseCount[key] = 0);
+        Object.keys(backrestCount).forEach(key => backrestCount[key] = 0);
+        Object.keys(seatCount).forEach(key => seatCount[key] = 0);
+        selectedComponents.forEach(comp => {
+          if (["Rigid Ultra-Light Manual Wheelchair", "Folding Ultra-Light Manual Wheelchair", "Power Wheelchair with Power Seating Functions", "Power Wheelchair without Power Seating Functions", "Hand-Rim Activated Power Assist", "Detachable Power Assist"].includes(comp)) {
+            mobilityBaseCount[comp] = (mobilityBaseCount[comp] || 0) + 1;
+          } else if (comp.includes("Backrest")) {
+            backrestCount[comp] = (backrestCount[comp] || 0) + 1;
+          } else if (comp.includes("Seat")) {
+            seatCount[comp] = (seatCount[comp] || 0) + 1;
+          }
+        });
+        localStorage.setItem("mobilityBaseCount", JSON.stringify(mobilityBaseCount));
+        localStorage.setItem("backrestCount", JSON.stringify(backrestCount));
+        localStorage.setItem("seatCount", JSON.stringify(seatCount));
+
+        const mobilityBaseList = document.getElementById("mobility-base-list");
+        const backrestList = document.getElementById("backrest-list");
+        const seatList = document.getElementById("seat-list");
+        [mobilityBaseList, backrestList, seatList].forEach(list => list.innerHTML = "");
+
+        selectedComponents.forEach(component => {
+          const label = MAINTENANCE_SCHEDULES[component].label;
+          if (["Rigid Ultra-Light Manual Wheelchair", "Folding Ultra-Light Manual Wheelchair", "Power Wheelchair with Power Seating Functions", "Power Wheelchair without Power Seating Functions", "Hand-Rim Activated Power Assist", "Detachable Power Assist"].includes(component)) {
+            const li = document.createElement("li");
+            li.textContent = label;
+            mobilityBaseList.appendChild(li);
+          } else if (component.includes("Backrest")) {
+            const li = document.createElement("li");
+            li.textContent = label;
+            backrestList.appendChild(li);
+          } else if (component.includes("Seat")) {
+            const li = document.createElement("li");
+            li.textContent = label;
+            seatList.appendChild(li);
+          }
+        });
+
+        document.getElementById("contact-card").classList.add("hidden");
+        document.getElementById("confirmation-card").classList.remove("hidden");
+        if (profileId) {
+          localStorage.setItem(`profile_${profileId}`, JSON.stringify(selectedComponents));
+          reminderCount++;
+          localStorage.setItem("reminderCount", reminderCount);
+          document.getElementById("reminder-count").textContent = reminderCount;
+        }
+      } catch (error) {
+        console.error("Error showing confirmation:", error);
+        document.getElementById("error").textContent = "An error occurred. Check the console for details.";
+        document.getElementById("error").style.display = "block";
+      }
+    }
+
+    function submitContact() {
+      try {
+        contacts.vendor = {
+          company: document.getElementById("vendor-company").value,
+          rep: document.getElementById("vendor-rep").value,
+          phone: document.getElementById("vendor-phone").value
+        };
+        contacts.therapist = {
+          hospital: document.getElementById("therapist-hospital").value,
+          name: document.getElementById("therapist-name").value,
+          phone: document.getElementById("therapist-phone").value,
+          email: document.getElementById("therapist-email").value
+        };
+        if (!contacts.vendor.company || !contacts.vendor.phone || !contacts.therapist.name || !contacts.therapist.phone || !contacts.therapist.email) {
+          throw new Error("Please fill in all required contact fields.");
+        }
+        document.getElementById("selection-card").classList.add("hidden");
+        document.getElementById("contact-card").classList.add("hidden");
+        document.getElementById("confirmation-card").classList.remove("hidden");
+        if (profileId) {
+          localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
+        }
+      } catch (error) {
+        console.error("Error submitting contact:", error);
+        document.getElementById("error").textContent = "An error occurred. Check the console for details.";
+        document.getElementById("error").style.display = "block";
+      }
+    }
+
+    function submitReminders() {
+      try {
+        if (selectedComponents.length === 0) {
+          throw new Error("No components selected for reminders.");
+        }
+
+        const reminderList = document.getElementById("reminder-list");
+        reminderList.innerHTML = "";
+        selectedComponents.forEach(component => {
+          const schedule = MAINTENANCE_SCHEDULES[component];
+          Object.entries(MAINTENANCE_SCHEDULES).forEach(([key, { label }]) => {
+            if (key === component) {
+              const li = document.createElement("li");
+              li.textContent = `Reminder set for ${label}`;
+              reminderList.appendChild(li);
+            }
+          });
+        });
+
+        document.getElementById("confirmation-card").classList.add("hidden");
+        document.getElementById("reminders").classList.remove("hidden");
 
         if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
           Notification.requestPermission().then(permission => {
             if (permission === "granted") {
-              sendNotifications(schedule);
+              sendNotifications();
             } else {
               alert("Notifications are disabled. Please enable them in browser settings.");
             }
           });
         } else if (Notification.permission === "granted") {
-          sendNotifications(schedule);
+          sendNotifications();
         } else {
           alert("This browser does not support notifications.");
         }
       } catch (error) {
-        console.error("Error setting reminders:", error);
-        const errorDiv = document.getElementById("error");
-        if (errorDiv) {
-          errorDiv.textContent = "An error occurred. Check the console for details.";
-          errorDiv.style.display = "block";
-        }
+        console.error("Error submitting reminders:", error);
+        document.getElementById("error").textContent = "An error occurred. Check the console for details.";
+        document.getElementById("error").style.display = "block";
       }
     }
 
-    function sendNotifications(schedule) {
-      Object.entries(schedule).forEach(([component, { task, redFlag }]) => {
-        new Notification(`Reminder: ${task} for ${component}`, { body: redFlag });
+    function sendNotifications() {
+      selectedComponents.forEach(component => {
+        const schedule = MAINTENANCE_SCHEDULES[component];
+        Object.entries(MAINTENANCE_SCHEDULES).forEach(([key, { label, task, redFlag }]) => {
+          if (key === component && task) {
+            let body = `${label} - ${redFlag}`;
+            if (redFlag.includes("Contact vendor") && contacts.vendor.phone) {
+              body += `; Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}`;
+            } else if (redFlag.includes("Contact dealer") && contacts.therapist.phone) {
+              body += `; Therapist: ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email} (${contacts.therapist.hospital})`;
+            }
+            new Notification(`Reminder: ${task}`, { body });
+          }
+        });
       });
     }
 
-    // Ensure DOM is fully loaded before adding event listeners
-    document.addEventListener("DOMContentLoaded", () => {
-      const button = document.querySelector(".button");
-      if (button) {
-        button.addEventListener("click", setReminders);
+    function turnOffReminders() {
+      if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+        Notification.permission = "denied";
+        localStorage.removeItem(`profile_${profileId}`);
+        disableCount++;
+        localStorage.setItem("disableCount", disableCount);
+        document.getElementById("disable-count").textContent = disableCount;
+        alert("Reminders have been turned off. Refresh the page to confirm.");
+        document.getElementById("reminders").classList.add("hidden");
+        document.getElementById("confirmation-card").classList.add("hidden");
+        document.getElementById("contact-card").classList.add("hidden");
+        document.getElementById("selection-card").classList.remove("hidden");
+        navigationHistory = ["selection-card"];
       } else {
-        console.error("Button element not found");
+        alert("Notifications are already disabled or not supported.");
       }
+    }
+
+    function goBack() {
+      if (navigationHistory.length > 1) {
+        navigationHistory.pop(); // Remove current page
+        const previousCard = navigationHistory.pop(); // Get previous page
+        const cards = ["selection-card", "contact-card", "confirmation-card", "profile-card", "reminders"];
+        cards.forEach(card => document.getElementById(card).classList.add("hidden"));
+        document.getElementById(previousCard).classList.remove("hidden");
+        navigationHistory.push(previousCard); // Re-add previous page to history
+        updateNavButtons();
+      }
+    }
+
+    function goHome() {
+      const cards = ["selection-card", "contact-card", "confirmation-card", "reminders"];
+      cards.forEach(card => document.getElementById(card).classList.add("hidden"));
+      document.getElementById("profile-card").classList.remove("hidden");
+      navigationHistory = ["profile-card"];
+      updateNavButtons();
+    }
+
+    function updateNavButtons() {
+      const currentCard = ["selection-card", "contact-card", "confirmation-card", "profile-card", "reminders"].find(card => !document.getElementById(card).classList.contains("hidden"));
+      document.querySelectorAll("#back-button").forEach(btn => btn.classList.toggle("hidden", navigationHistory.length <= 1));
+      document.querySelectorAll("#return-to-home, #return-to-home-reminders").forEach(btn => btn.classList.remove("hidden"));
+    }
+
+    function adminLogin() {
+      const code = prompt("Enter admin code:");
+      if (code === "6009") {
+        document.getElementById("admin-data").classList.remove("hidden");
+      } else {
+        alert("Incorrect code.");
+      }
+    }
+
+    function updateAdminStats() {
+      const mobilityBaseSorted = Object.entries(mobilityBaseCount).sort((a, b) => b[1] - a[1]).map(([key, value]) => `${key}: ${value}`).join(", ");
+      const backrestSorted = Object.entries(backrestCount).sort((a, b) => b[1] - a[1]).map(([key, value]) => `${key}: ${value}`).join(", ");
+      const seatSorted = Object.entries(seatCount).sort((a, b) => b[1] - a[1]).map(([key, value]) => `${key}: ${value}`).join(", ");
+      document.getElementById("mobility-base-count").textContent = mobilityBaseSorted;
+      document.getElementById("backrest-count").textContent = backrestSorted;
+      document.getElementById("seat-count").textContent = seatSorted;
+    }
+
+    // Ensure DOM is fully loaded before adding event listeners and initializing
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeProfile();
+
+      const nextToContact = document.getElementById("next-to-contact");
+      const submitContact = document.getElementById("submit-contact");
+      const submitFinal = document.getElementById("submit-final");
+      const turnOffRemindersBtn = document.getElementById("turn-off-reminders");
+      const turnOffRemindersProfileBtn = document.getElementById("turn-off-reminders-profile");
+      const backButtons = document.querySelectorAll("#back-button");
+      const returnToHome = document.getElementById("return-to-home");
+      const returnToHomeReminders = document.getElementById("return-to-home-reminders");
+      const nextToConfirm = document.getElementById("next-to-confirm");
+
+      backButtons.forEach(btn => btn.addEventListener("click", goBack));
+      if (returnToHome) returnToHome.addEventListener("click", goHome);
+      if (returnToHomeReminders) returnToHomeReminders.addEventListener("click", goHome);
+      if (nextToContact) nextToContact.addEventListener("click", () => { showConfirmation(); navigationHistory.push("contact-card"); updateNavButtons(); });
+      if (submitContact) submitContact.addEventListener("click", () => { submitContact(); navigationHistory.push("confirmation-card"); updateNavButtons(); });
+      if (submitFinal) submitFinal.addEventListener("click", () => { submitReminders(); navigationHistory.push("reminders"); updateNavButtons(); });
+      if (turnOffRemindersBtn) turnOffRemindersBtn.addEventListener("click", turnOffReminders);
+      if (turnOffRemindersProfileBtn) turnOffRemindersProfileBtn.addEventListener("click", turnOffReminders);
+      if (nextToConfirm) nextToConfirm.addEventListener("click", showConfirmation);
     });
   </script>
 </body>
