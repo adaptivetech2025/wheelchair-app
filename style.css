@@ -31,9 +31,7 @@ h1 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
-.selection-container {
-  max-height: 60vh;
-  overflow-y: auto;
+.section-card {
   margin-bottom: 1.5rem;
 }
 .label {
@@ -175,8 +173,5 @@ th {
   .button, .turn-off-button {
     padding: 0.5rem;
     font-size: 0.9rem;
-  }
-  .selection-container {
-    max-height: 50vh;
   }
 }
