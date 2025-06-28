@@ -13,23 +13,54 @@
   <button class="admin-login" onclick="adminLogin()">Admin Login</button>
   <div class="container">
     <h1>Wheelchair Maintenance Reminder</h1>
-    <div id="selection-card" class="card">
-      <div class="selection-container">
-        <table>
-          <tr><th colspan="2" class="label">Select Primary Equipment (Required)</th></tr>
-          <tr><td colspan="2"><select id="primary-equipment" class="select" required><option value="">Select one</option><option value="Rigid Ultra-Light Manual Wheelchair">Rigid Ultra-Light Manual Wheelchair</option><option value="Folding Ultra-Light Manual Wheelchair">Folding Ultra-Light Manual Wheelchair</option><option value="Power Wheelchair with Power Seating Functions">Power Wheelchair with Power Seating Functions</option><option value="Power Wheelchair without Power Seating Functions">Power Wheelchair without Power Seating Functions</option></select></td></tr>
-          <tr><th colspan="2" class="label">Optional Power Assist (Select one or both)</th></tr>
-          <tr><td><label><input type="checkbox" id="detachable-power-assist" value="Detachable Power Assist"> Detachable Power Assist</label></td><td><label><input type="checkbox" id="hand-rim-power-assist" value="Hand-Rim Activated Power Assist"> Hand-Rim Activated Power Assist</label></td></tr>
-          <tr><th colspan="2" class="label">Select Seat Cushion(s) (One or more)</th></tr>
-          <tr><td><label><input type="checkbox" id="air-seat" value="Air Seat Cushion"> Air Seat Cushion</label></td><td><label><input type="checkbox" id="foam-seat" value="Foam Seat Cushion"> Foam Seat Cushion</label></td></tr>
-          <tr><td><label><input type="checkbox" id="gel-seat" value="Gel Seat Cushion"> Gel Seat Cushion</label></td><td></td></tr>
-          <tr><th colspan="2" class="label">Select Backrest Cushion(s) (One or more)</th></tr>
-          <tr><td><label><input type="checkbox" id="air-backrest" value="Air Backrest Cushion"> Air Backrest Cushion</label></td><td><label><input type="checkbox" id="foam-backrest" value="Foam Backrest Cushion"> Foam Backrest Cushion</label></td></tr>
-          <tr><td><label><input type="checkbox" id="gel-backrest" value="Gel Backrest Cushion"> Gel Backrest Cushion</label></td><td></td></tr>
-        </table>
-      </div>
+    <div id="selection-primary-card" class="card">
+      <h2>Select Primary Equipment</h2>
+      <table>
+        <tr><td colspan="2"><select id="primary-equipment" class="select"><option value="">Select one</option><option value="Rigid Ultra-Light Manual Wheelchair">Rigid Ultra-Light Manual Wheelchair</option><option value="Folding Ultra-Light Manual Wheelchair">Folding Ultra-Light Manual Wheelchair</option><option value="Power Wheelchair with Power Seating Functions">Power Wheelchair with Power Seating Functions</option><option value="Power Wheelchair without Power Seating Functions">Power Wheelchair without Power Seating Functions</option></select></td></tr>
+      </table>
       <div class="nav-buttons">
         <button id="back-button" class="button hidden">Back</button>
+        <button id="next-to-power" class="button">Next</button>
+        <button id="return-to-home" class="button">Return to Home</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="selection-power-card" class="card hidden">
+      <h2>Select Power Assist</h2>
+      <table>
+        <tr><th colspan="2" class="label">Optional Power Assist (Select one or both)</th></tr>
+        <tr><td><label><input type="checkbox" id="detachable-power-assist" value="Detachable Power Assist"> Detachable Power Assist</label></td><td><label><input type="checkbox" id="hand-rim-power-assist" value="Hand-Rim Activated Power Assist"> Hand-Rim Activated Power Assist</label></td></tr>
+      </table>
+      <div class="nav-buttons">
+        <button id="back-button" class="button">Back</button>
+        <button id="next-to-seat" class="button">Next</button>
+        <button id="return-to-home" class="button">Return to Home</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="selection-seat-card" class="card hidden">
+      <h2>Select Seat Cushions</h2>
+      <table>
+        <tr><th colspan="2" class="label">Select Seat Cushion(s) (One or more)</th></tr>
+        <tr><td><label><input type="checkbox" id="air-seat" value="Air Seat Cushion"> Air Seat Cushion</label></td><td><label><input type="checkbox" id="foam-seat" value="Foam Seat Cushion"> Foam Seat Cushion</label></td></tr>
+        <tr><td><label><input type="checkbox" id="gel-seat" value="Gel Seat Cushion"> Gel Seat Cushion</label></td><td></td></tr>
+      </table>
+      <div class="nav-buttons">
+        <button id="back-button" class="button">Back</button>
+        <button id="next-to-backrest" class="button">Next</button>
+        <button id="return-to-home" class="button">Return to Home</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="selection-backrest-card" class="card hidden">
+      <h2>Select Backrest Cushions</h2>
+      <table>
+        <tr><th colspan="2" class="label">Select Backrest Cushion(s) (One or more)</th></tr>
+        <tr><td><label><input type="checkbox" id="air-backrest" value="Air Backrest Cushion"> Air Backrest Cushion</label></td><td><label><input type="checkbox" id="foam-backrest" value="Foam Backrest Cushion"> Foam Backrest Cushion</label></td></tr>
+        <tr><td><label><input type="checkbox" id="gel-backrest" value="Gel Backrest Cushion"> Gel Backrest Cushion</label></td><td></td></tr>
+      </table>
+      <div class="nav-buttons">
+        <button id="back-button" class="button">Back</button>
         <button id="next-to-contact" class="button">Next: Enter Contact Info</button>
         <button id="return-to-home" class="button">Return to Home</button>
       </div>
@@ -156,9 +187,11 @@
         contacts = savedContacts;
         selectedComponents = savedComponents;
         if (savedComponents.length > 0) {
-          document.getElementById("selection-card").classList.add("hidden");
+          document.getElementById("selection-primary-card").classList.add("hidden");
+          document.getElementById("selection-power-card").classList.add("hidden");
+          document.getElementById("selection-seat-card").classList.add("hidden");
+          document.getElementById("selection-backrest-card").classList.add("hidden");
           document.getElementById("contact-card").classList.add("hidden");
-          document.getElementById("confirmation-card").classList.add("hidden");
           document.getElementById("reminders").classList.add("hidden");
           document.getElementById("profile-card").classList.remove("hidden");
           const profileList = document.getElementById("profile-list");
@@ -167,7 +200,7 @@
           updateContactDisplay();
           navigationHistory = ["profile-card"];
         } else {
-          navigationHistory = ["selection-card"];
+          navigationHistory = ["selection-primary-card"];
         }
         updateNavButtons();
       }
@@ -184,8 +217,8 @@
 
     function editProfile() {
       document.getElementById("profile-card").classList.add("hidden");
-      document.getElementById("selection-card").classList.remove("hidden");
-      navigationHistory.push("selection-card");
+      document.getElementById("selection-primary-card").classList.remove("hidden");
+      navigationHistory.push("selection-primary-card");
       selectedComponents = JSON.parse(localStorage.getItem(`profile_${profileId}`) || "[]");
       if (selectedComponents.length > 0) {
         document.getElementById("primary-equipment").value = selectedComponents.find(comp => Object.keys(MAINTENANCE_SCHEDULES).includes(comp));
@@ -232,56 +265,51 @@
       });
     }
 
-    function showConfirmation() {
+    function nextSection(currentCardId, nextCardId) {
       try {
-        const primaryEquipment = document.getElementById("primary-equipment").value;
-        if (!primaryEquipment || !MAINTENANCE_SCHEDULES[primaryEquipment]) {
-          throw new Error("Please select a primary equipment type.");
+        if (currentCardId === "selection-primary-card") {
+          const primaryEquipment = document.getElementById("primary-equipment").value;
+          if (primaryEquipment) selectedComponents = [primaryEquipment];
+          else selectedComponents = []; // Allow empty but track intent
+        } else if (currentCardId === "selection-power-card") {
+          const detachablePowerAssist = document.getElementById("detachable-power-assist").checked ? "Detachable Power Assist" : null;
+          const handRimPowerAssist = document.getElementById("hand-rim-power-assist").checked ? "Hand-Rim Activated Power Assist" : null;
+          if (detachablePowerAssist) selectedComponents.push(detachablePowerAssist);
+          if (handRimPowerAssist) selectedComponents.push(handRimPowerAssist);
+        } else if (currentCardId === "selection-seat-card") {
+          ["air-seat", "foam-seat", "gel-seat"].forEach(id => {
+            if (document.getElementById(id).checked) selectedComponents.push(document.getElementById(id).value);
+          });
+        } else if (currentCardId === "selection-backrest-card") {
+          ["air-backrest", "foam-backrest", "gel-backrest"].forEach(id => {
+            if (document.getElementById(id).checked) selectedComponents.push(document.getElementById(id).value);
+          });
         }
-
-        const detachablePowerAssist = document.getElementById("detachable-power-assist").checked ? "Detachable Power Assist" : null;
-        const handRimPowerAssist = document.getElementById("hand-rim-power-assist").checked ? "Hand-Rim Activated Power Assist" : null;
-        const seatCushions = [];
-        ["air-seat", "foam-seat", "gel-seat"].forEach(id => {
-          if (document.getElementById(id).checked) seatCushions.push(document.getElementById(id).value);
-        });
-        const backrestCushions = [];
-        ["air-backrest", "foam-backrest", "gel-backrest"].forEach(id => {
-          if (document.getElementById(id).checked) backrestCushions.push(document.getElementById(id).value);
-        });
-
-        selectedComponents = [primaryEquipment];
-        if (detachablePowerAssist) selectedComponents.push(detachablePowerAssist);
-        if (handRimPowerAssist) selectedComponents.push(handRimPowerAssist);
-        selectedComponents = selectedComponents.concat(seatCushions, backrestCushions);
-
-        // Update category counts
-        Object.keys(mobilityBaseCount).forEach(key => mobilityBaseCount[key] = 0);
-        Object.keys(backrestCount).forEach(key => backrestCount[key] = 0);
-        Object.keys(seatCount).forEach(key => seatCount[key] = 0);
-        selectedComponents.forEach(comp => {
-          if (["Rigid Ultra-Light Manual Wheelchair", "Folding Ultra-Light Manual Wheelchair", "Power Wheelchair with Power Seating Functions", "Power Wheelchair without Power Seating Functions", "Hand-Rim Activated Power Assist", "Detachable Power Assist"].includes(comp)) {
-            mobilityBaseCount[comp] = (mobilityBaseCount[comp] || 0) + 1;
-          } else if (comp.includes("Backrest")) {
-            backrestCount[comp] = (backrestCount[comp] || 0) + 1;
-          } else if (comp.includes("Seat")) {
-            seatCount[comp] = (seatCount[comp] || 0) + 1;
-          }
-        });
-        localStorage.setItem("mobilityBaseCount", JSON.stringify(mobilityBaseCount));
-        localStorage.setItem("backrestCount", JSON.stringify(backrestCount));
-        localStorage.setItem("seatCount", JSON.stringify(seatCount));
-
-        document.getElementById("selection-card").classList.add("hidden");
-        document.getElementById("contact-card").classList.remove("hidden");
+        document.getElementById(currentCardId).classList.add("hidden");
+        document.getElementById(nextCardId).classList.remove("hidden");
+        navigationHistory.push(nextCardId);
         if (profileId) {
           localStorage.setItem(`profile_${profileId}`, JSON.stringify(selectedComponents));
-          reminderCount++;
-          localStorage.setItem("reminderCount", reminderCount);
-          document.getElementById("reminder-count").textContent = reminderCount;
+          // Update category counts
+          Object.keys(mobilityBaseCount).forEach(key => mobilityBaseCount[key] = 0);
+          Object.keys(backrestCount).forEach(key => backrestCount[key] = 0);
+          Object.keys(seatCount).forEach(key => seatCount[key] = 0);
+          selectedComponents.forEach(comp => {
+            if (["Rigid Ultra-Light Manual Wheelchair", "Folding Ultra-Light Manual Wheelchair", "Power Wheelchair with Power Seating Functions", "Power Wheelchair without Power Seating Functions", "Hand-Rim Activated Power Assist", "Detachable Power Assist"].includes(comp)) {
+              mobilityBaseCount[comp] = (mobilityBaseCount[comp] || 0) + 1;
+            } else if (comp.includes("Backrest")) {
+              backrestCount[comp] = (backrestCount[comp] || 0) + 1;
+            } else if (comp.includes("Seat")) {
+              seatCount[comp] = (seatCount[comp] || 0) + 1;
+            }
+          });
+          localStorage.setItem("mobilityBaseCount", JSON.stringify(mobilityBaseCount));
+          localStorage.setItem("backrestCount", JSON.stringify(backrestCount));
+          localStorage.setItem("seatCount", JSON.stringify(seatCount));
         }
+        updateNavButtons();
       } catch (error) {
-        console.error("Error showing confirmation:", error);
+        console.error("Error advancing section:", error);
         document.getElementById("error").textContent = `An error occurred. Check the console for details: ${error.message}`;
         document.getElementById("error").style.display = "block";
       }
@@ -300,14 +328,17 @@
           phone: document.getElementById("therapist-phone").value,
           email: document.getElementById("therapist-email").value
         };
-        if (!contacts.vendor.company || !contacts.vendor.phone || !contacts.therapist.name || !contacts.therapist.phone || !contacts.therapist.email) {
-          throw new Error("Please fill in all required contact fields.");
-        }
-        document.getElementById("selection-card").classList.add("hidden");
+        document.getElementById("selection-primary-card").classList.add("hidden");
+        document.getElementById("selection-power-card").classList.add("hidden");
+        document.getElementById("selection-seat-card").classList.add("hidden");
+        document.getElementById("selection-backrest-card").classList.add("hidden");
         document.getElementById("contact-card").classList.add("hidden");
         document.getElementById("reminders").classList.remove("hidden");
         if (profileId) {
           localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
+          reminderCount++;
+          localStorage.setItem("reminderCount", reminderCount);
+          document.getElementById("reminder-count").textContent = reminderCount;
         }
       } catch (error) {
         console.error("Error submitting contact:", error);
@@ -319,7 +350,7 @@
     function submitReminders() {
       try {
         if (selectedComponents.length === 0) {
-          throw new Error("No components selected for reminders.");
+          selectedComponents = []; // Allow empty but proceed
         }
 
         const reminderList = document.getElementById("reminder-list");
@@ -336,6 +367,12 @@
         });
 
         document.getElementById("reminders").classList.remove("hidden");
+        document.getElementById("selection-primary-card").classList.add("hidden");
+        document.getElementById("selection-power-card").classList.add("hidden");
+        document.getElementById("selection-seat-card").classList.add("hidden");
+        document.getElementById("selection-backrest-card").classList.add("hidden");
+        document.getElementById("contact-card").classList.add("hidden");
+        goHome(); // Redirect to profile after reminders
 
         if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
           Notification.requestPermission().then(permission => {
@@ -384,8 +421,8 @@
         alert("Reminders have been turned off. Refresh the page to confirm.");
         document.getElementById("reminders").classList.add("hidden");
         document.getElementById("contact-card").classList.add("hidden");
-        document.getElementById("selection-card").classList.remove("hidden");
-        navigationHistory = ["selection-card"];
+        document.getElementById("selection-primary-card").classList.remove("hidden");
+        navigationHistory = ["selection-primary-card"];
       } else {
         alert("Notifications are already disabled or not supported.");
       }
@@ -395,7 +432,7 @@
       if (navigationHistory.length > 1) {
         navigationHistory.pop(); // Remove current page
         const previousCard = navigationHistory.pop(); // Get previous page
-        const cards = ["selection-card", "contact-card", "reminders", "profile-card"];
+        const cards = ["selection-primary-card", "selection-power-card", "selection-seat-card", "selection-backrest-card", "contact-card", "reminders", "profile-card"];
         cards.forEach(card => document.getElementById(card).classList.add("hidden"));
         document.getElementById(previousCard).classList.remove("hidden");
         navigationHistory.push(previousCard); // Re-add previous page to history
@@ -404,7 +441,7 @@
     }
 
     function goHome() {
-      const cards = ["selection-card", "contact-card", "reminders"];
+      const cards = ["selection-primary-card", "selection-power-card", "selection-seat-card", "selection-backrest-card", "contact-card", "reminders"];
       cards.forEach(card => document.getElementById(card).classList.add("hidden"));
       document.getElementById("profile-card").classList.remove("hidden");
       navigationHistory = ["profile-card"];
@@ -412,7 +449,7 @@
     }
 
     function updateNavButtons() {
-      const currentCard = ["selection-card", "contact-card", "reminders", "profile-card"].find(card => !document.getElementById(card).classList.contains("hidden"));
+      const currentCard = ["selection-primary-card", "selection-power-card", "selection-seat-card", "selection-backrest-card", "contact-card", "reminders", "profile-card"].find(card => !document.getElementById(card).classList.contains("hidden"));
       document.querySelectorAll("#back-button").forEach(btn => btn.classList.toggle("hidden", navigationHistory.length <= 1));
       document.querySelectorAll("#return-to-home, #return-to-home-reminders").forEach(btn => btn.classList.remove("hidden"));
     }
@@ -439,6 +476,9 @@
     document.addEventListener("DOMContentLoaded", () => {
       initializeProfile();
 
+      const nextToPower = document.getElementById("next-to-power");
+      const nextToSeat = document.getElementById("next-to-seat");
+      const nextToBackrest = document.getElementById("next-to-backrest");
       const nextToContact = document.getElementById("next-to-contact");
       const submitContact = document.getElementById("submit-contact");
       const submitFinal = document.getElementById("submit-final");
@@ -451,9 +491,12 @@
       backButtons.forEach(btn => btn.addEventListener("click", goBack));
       if (returnToHome) returnToHome.addEventListener("click", goHome);
       if (returnToHomeReminders) returnToHomeReminders.addEventListener("click", goHome);
-      if (nextToContact) nextToContact.addEventListener("click", () => { showConfirmation(); navigationHistory.push("contact-card"); updateNavButtons(); });
+      if (nextToPower) nextToPower.addEventListener("click", () => nextSection("selection-primary-card", "selection-power-card"));
+      if (nextToSeat) nextToSeat.addEventListener("click", () => nextSection("selection-power-card", "selection-seat-card"));
+      if (nextToBackrest) nextToBackrest.addEventListener("click", () => nextSection("selection-seat-card", "selection-backrest-card"));
+      if (nextToContact) nextToContact.addEventListener("click", () => nextSection("selection-backrest-card", "contact-card"));
       if (submitContact) submitContact.addEventListener("click", () => { submitContact(); navigationHistory.push("reminders"); updateNavButtons(); });
-      if (submitFinal) submitFinal.addEventListener("click", () => { submitReminders(); navigationHistory.push("reminders"); updateNavButtons(); });
+      if (submitFinal) submitFinal.addEventListener("click", () => { submitReminders(); navigationHistory.push("profile-card"); updateNavButtons(); });
       if (turnOffRemindersBtn) turnOffRemindersBtn.addEventListener("click", turnOffReminders);
       if (turnOffRemindersProfileBtn) turnOffRemindersProfileBtn.addEventListener("click", turnOffReminders);
     });
