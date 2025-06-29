@@ -240,7 +240,7 @@
     function generateICS() {
       const now = new Date();
       now.setUTCHours(9, 0, 0, 0); // Set to 9 AM UTC
-      const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
+      const endDate = new Date(now.getFullYear(), now.getMonth() + 6, now.getDate()); // 6 months for testing, adjust to 12 if successful
       const events = [];
 
       selectedComponents.forEach(comp => {
@@ -274,15 +274,26 @@ PRODID:-//Wheelchair Maintenance Reminder//EN
 ${events.join('\n')}
 END:VCALENDAR`;
 
-        const blob = new Blob([icsContent], { type: 'text/calendar' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `wheelchair_maintenance_${profileId}.ics`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        try {
+          const blob = new Blob([icsContent], { type: 'text/calendar' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `wheelchair_maintenance_${profileId}.ics`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        } catch (e) {
+          // Fallback for Safari
+          const dataUri = `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
+          const a = document.createElement('a');
+          a.href = dataUri;
+          a.download = `wheelchair_maintenance_${profileId}.ics`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
       } else {
         alert("No equipment selected to generate a reminder schedule.");
       }
@@ -300,12 +311,12 @@ END:VCALENDAR`;
 
     function turnOnReminders() {
       if (selectedComponents.length > 0) {
-        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 1 year of schedules will be generated.")) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 6 months of schedules will be generated for testing (adjust to 1 year if successful).")) {
           remindersEnabled = true;
           localStorage.setItem(`remindersEnabled_${profileId}`, "true");
           generateICS(); // Generate and download ICS file
           document.getElementById("calendar-instructions").style.display = "block"; // Show instructions
-          alert("Reminders turned on; download the calendar file and import it into your calendar app for the next 1 year.");
+          alert("Reminders turned on; download the calendar file and import it into your calendar app.");
         }
       } else {
         alert("Please select at least one piece of equipment to enable reminders.");
