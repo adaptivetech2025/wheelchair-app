@@ -80,7 +80,7 @@
         <p>1. Click the "Download Reminder Schedule" button below to download your custom calendar file.</p>
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
-        <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app.</p>
+        <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9 AM on the event day.</p>
         <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
@@ -239,6 +239,7 @@
 
     function generateICS() {
       const now = new Date();
+      now.setUTCHours(9, 0, 0, 0); // Set to 9 AM UTC
       const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
       const events = [];
 
@@ -256,6 +257,11 @@ DTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DURATION:P1D
 SUMMARY:Reminder - ${schedule.task} for ${schedule.label}
 DESCRIPTION:Please ${schedule.task}.\n${schedule.redFlag}\n${vendorInfo}
+BEGIN:VALARM
+TRIGGER:-PT0H
+ACTION:DISPLAY
+DESCRIPTION:Reminder - ${schedule.task} for ${schedule.label}
+END:VALARM
 END:VEVENT`);
           currentDate.setMonth(currentDate.getMonth() + intervalMonths);
         }
