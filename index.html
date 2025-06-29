@@ -72,8 +72,6 @@
       <div class="nav-buttons">
         <!-- Removed "Home" button from profile -->
       </div>
-      <div class="label">Reminder Email (Optional)</div>
-      <input type="email" id="reminder-email" placeholder="Enter email for calendar reminders" style="margin-top: 0.5rem;">
       <button id="turn-off-reminders-profile" class="turn-off-button">Turn Off Reminders</button>
       <button id="turn-on-reminders-profile" class="turn-on-button">Turn On Reminders</button>
       <button id="reset-data-profile" class="reset-button">Reset/Erase Data</button>
@@ -83,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app.</p>
-        <p><strong>Note:</strong> Reminders will appear based on the maintenance schedule for your equipment.</p>
+        <p><strong>Note:</strong> Reminders will appear based on the maintenance schedule for your selected equipment.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="since-date" id="since-date"></div>
@@ -101,18 +99,18 @@
   </div>
   <script>
     const MAINTENANCE_SCHEDULES = {
-      "Rigid Ultra-Light Manual Wheelchair": { label: "Rigid Ultra-Light Manual Wheelchair", task: "Check camber plug clamps", redFlag: "Contact vendor if loose", interval: "1M" },
-      "Folding Ultra-Light Manual Wheelchair": { label: "Folding Ultra-Light Manual Wheelchair", task: "Check folding mechanism", redFlag: "Contact vendor if sticks", interval: "1M" },
-      "Hand-Rim Activated Power Assist": { label: "Hand-Rim Activated Power Assist", task: "Check battery capacity", redFlag: "Contact dealer if fails", interval: "1M" },
-      "Detachable Power Assist": { label: "Detachable Power Assist", task: "Inspect components", redFlag: "Contact dealer if damaged", interval: "1M" },
-      "Power Wheelchair with Power Seating Functions": { label: "Power Wheelchair with Power Seating Functions", task: "Check battery level", redFlag: "Contact vendor if fails", interval: "1M" },
-      "Power Wheelchair without Power Seating Functions": { label: "Power Wheelchair without Power Seating Functions", task: "Check tires", redFlag: "Contact vendor if pressure drops", interval: "1M" },
-      "Air Backrest Cushion": { label: "Air Backrest Cushion", task: "Check air inserts", redFlag: "Contact vendor if leaks", interval: "3M" },
-      "Foam Backrest Cushion": { label: "Foam Backrest Cushion", task: "Inspect foam pad", redFlag: "Contact vendor if degraded", interval: "3M" },
-      "Gel Backrest Cushion": { label: "Gel Backrest Cushion", task: "Inspect gel pad", redFlag: "Contact vendor if degraded", interval: "3M" },
-      "Air Seat Cushion": { label: "Air Seat Cushion", task: "Check air cells", redFlag: "Contact vendor if punctures", interval: "3M" },
-      "Foam Seat Cushion": { label: "Foam Seat Cushion", task: "Inspect foam", redFlag: "Contact vendor if degraded", interval: "3M" },
-      "Gel Seat Cushion": { label: "Gel Seat Cushion", task: "Inspect fluid pad", redFlag: "Contact vendor if leaks", interval: "3M" }
+      "Rigid Ultra-Light Manual Wheelchair": { label: "Rigid Ultra-Light Manual Wheelchair", task: "Inspect camber plug clamps for tightness", redFlag: "Contact your vendor if clamps are loose", interval: "1M" },
+      "Folding Ultra-Light Manual Wheelchair": { label: "Folding Ultra-Light Manual Wheelchair", task: "Inspect folding mechanism for smooth operation", redFlag: "Contact your vendor if mechanism sticks", interval: "1M" },
+      "Hand-Rim Activated Power Assist": { label: "Hand-Rim Activated Power Assist", task: "Check battery capacity for full charge", redFlag: "Contact your therapist if battery fails", interval: "1M" },
+      "Detachable Power Assist": { label: "Detachable Power Assist", task: "Inspect all components for wear or damage", redFlag: "Contact your therapist if components are damaged", interval: "1M" },
+      "Power Wheelchair with Power Seating Functions": { label: "Power Wheelchair with Power Seating Functions", task: "Inspect battery level for adequate charge", redFlag: "Contact your vendor if battery fails", interval: "1M" },
+      "Power Wheelchair without Power Seating Functions": { label: "Power Wheelchair without Power Seating Functions", task: "Inspect tire pressure for proper inflation", redFlag: "Contact your vendor if pressure drops", interval: "1M" },
+      "Air Backrest Cushion": { label: "Air Backrest Cushion", task: "Check air inserts for leaks or deflation", redFlag: "Contact your vendor if air leaks are found", interval: "3M" },
+      "Foam Backrest Cushion": { label: "Foam Backrest Cushion", task: "Inspect foam pad for signs of wear or flattening", redFlag: "Contact your vendor if foam is degraded", interval: "3M" },
+      "Gel Backrest Cushion": { label: "Gel Backrest Cushion", task: "Inspect gel pad for cracks or leakage", redFlag: "Contact your vendor if gel is degraded", interval: "3M" },
+      "Air Seat Cushion": { label: "Air Seat Cushion", task: "Check air cells for punctures or loss of air", redFlag: "Contact your vendor if punctures are found", interval: "3M" },
+      "Foam Seat Cushion": { label: "Foam Seat Cushion", task: "Inspect foam for wear or compression", redFlag: "Contact your vendor if foam is degraded", interval: "3M" },
+      "Gel Seat Cushion": { label: "Gel Seat Cushion", task: "Inspect fluid pad for leaks or damage", redFlag: "Contact your vendor if fluid leaks are found", interval: "3M" }
     };
 
     let selectedComponents = [];
@@ -127,7 +125,6 @@
     let startDate = localStorage.getItem(`startDate_${profileId}`) || new Date().toLocaleDateString();
     let currentStep = localStorage.getItem(`currentStep_${profileId}`) || "selection";
     let remindersEnabled = localStorage.getItem(`remindersEnabled_${profileId}`) !== "false";
-    let reminderEmail = localStorage.getItem(`reminderEmail_${profileId}`) || "";
 
     function generateProfileId() {
       try {
@@ -149,7 +146,6 @@
       updateSinceDate();
       updateProfileList();
       updateEquipmentList();
-      document.getElementById("reminder-email").value = reminderEmail; // Update email field
       document.getElementById("calendar-instructions").style.display = remindersEnabled ? "block" : "none"; // Show instructions if reminders enabled
     }
 
@@ -174,7 +170,6 @@
         localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
         localStorage.setItem(`currentStep_${profileId}`, currentStep);
         localStorage.setItem(`remindersEnabled_${profileId}`, remindersEnabled);
-        localStorage.setItem(`reminderEmail_${profileId}`, reminderEmail);
         // Update category counts
         Object.keys(mobilityBaseCount).forEach(key => mobilityBaseCount[key] = 0);
         Object.keys(backrestCount).forEach(key => backrestCount[key] = 0);
@@ -248,30 +243,37 @@
         const schedule = MAINTENANCE_SCHEDULES[comp];
         const start = new Date(now);
         const interval = schedule.interval === "3M" ? 3 : 1; // Monthly (1M) or quarterly (3M)
+        const vendorInfo = schedule.redFlag.includes("Contact vendor") && contacts.vendor.phone
+          ? `Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
+          : "";
         return `BEGIN:VEVENT
 DTSTART:${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DURATION:P${interval}M
 SUMMARY:Reminder - ${schedule.task} for ${schedule.label}
-DESCRIPTION:${schedule.label} - ${schedule.redFlag}\n${schedule.redFlag.includes("Contact vendor") && contacts.vendor.phone ? `Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}` : ''}${schedule.redFlag.includes("Contact dealer") && contacts.therapist.phone ? `Therapist: ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email} (${contacts.therapist.hospital})` : ''}
+DESCRIPTION:Please ${schedule.task}.\n${schedule.redFlag}\n${vendorInfo}
 RRULE:FREQ=MONTHLY;INTERVAL=${interval}
 END:VEVENT`;
       }).join('\n');
 
-      const icsContent = `BEGIN:VCALENDAR
+      if (events) {
+        const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Wheelchair Maintenance Reminder//EN
 ${events}
 END:VCALENDAR`;
 
-      const blob = new Blob([icsContent], { type: 'text/calendar' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `wheelchair_maintenance_${profileId}.ics`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+        const blob = new Blob([icsContent], { type: 'text/calendar' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `wheelchair_maintenance_${profileId}.ics`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      } else {
+        alert("No equipment selected to generate a reminder schedule.");
+      }
     }
 
     function turnOffReminders() {
@@ -280,26 +282,21 @@ END:VCALENDAR`;
       disableCount++;
       localStorage.setItem("disableCount", disableCount);
       document.getElementById("disable-count").textContent = disableCount;
-      reminderEmail = ""; // Clear email on disable
-      localStorage.setItem(`reminderEmail_${profileId}`, "");
       document.getElementById("calendar-instructions").style.display = "none"; // Hide instructions
       alert("Reminders have been turned off.");
     }
 
     function turnOnReminders() {
-      const email = document.getElementById("reminder-email").value.trim();
-      if (email) {
-        if (confirm("Are you sure you want to turn on reminders? A custom calendar file will be generated for " + email + ".")) {
+      if (selectedComponents.length > 0) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file will be generated for your selected equipment.")) {
           remindersEnabled = true;
-          reminderEmail = email;
           localStorage.setItem(`remindersEnabled_${profileId}`, "true");
-          localStorage.setItem(`reminderEmail_${profileId}`, email);
           generateICS(); // Generate and download ICS file
           document.getElementById("calendar-instructions").style.display = "block"; // Show instructions
           alert("Reminders turned on; download the calendar file and import it into your calendar app.");
         }
       } else {
-        alert("Please enter an email address for reminders.");
+        alert("Please select at least one piece of equipment to enable reminders.");
       }
     }
 
