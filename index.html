@@ -81,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app.</p>
-        <p><strong>Note:</strong> Reminders will appear based on the maintenance schedule for your selected equipment over the next 5 years.</p>
+        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="since-date" id="since-date"></div>
@@ -187,8 +187,8 @@
         localStorage.setItem("backrestCount", JSON.stringify(backrestCount));
         localStorage.setItem("seat-count", JSON.stringify(seatCount));
         localStorage.setItem("userCount", userCount);
-        localStorage.setItem("reminderCount", reminderCount);
-        localStorage.setItem("disableCount", disableCount);
+        localStorage.setItem("reminder-count", reminderCount);
+        localStorage.setItem("disable-count", disableCount);
       }
     }
 
@@ -239,7 +239,7 @@
 
     function generateICS() {
       const now = new Date();
-      const endDate = new Date(now.getFullYear() + 5, now.getMonth(), now.getDate()); // 5 years from now
+      const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
       const events = [];
 
       selectedComponents.forEach(comp => {
@@ -286,7 +286,7 @@ END:VCALENDAR`;
       remindersEnabled = false;
       localStorage.setItem(`remindersEnabled_${profileId}`, "false");
       disableCount++;
-      localStorage.setItem("disableCount", disableCount);
+      localStorage.setItem("disable-count", disableCount);
       document.getElementById("disable-count").textContent = disableCount;
       document.getElementById("calendar-instructions").style.display = "none"; // Hide instructions
       alert("Reminders have been turned off.");
@@ -294,12 +294,12 @@ END:VCALENDAR`;
 
     function turnOnReminders() {
       if (selectedComponents.length > 0) {
-        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 5 years of schedules will be generated.")) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 1 year of schedules will be generated.")) {
           remindersEnabled = true;
           localStorage.setItem(`remindersEnabled_${profileId}`, "true");
           generateICS(); // Generate and download ICS file
           document.getElementById("calendar-instructions").style.display = "block"; // Show instructions
-          alert("Reminders turned on; download the calendar file and import it into your calendar app for the next 5 years.");
+          alert("Reminders turned on; download the calendar file and import it into your calendar app for the next 1 year.");
         }
       } else {
         alert("Please select at least one piece of equipment to enable reminders.");
