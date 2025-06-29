@@ -81,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9 AM on the event day.</p>
-        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year. If download fails in Safari, try a different browser or deploy to a secure server like Vercel.</p>
+        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year, spaced according to maintenance intervals starting from the download date.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="since-date" id="since-date"></div>
@@ -240,13 +240,13 @@
     function generateICS() {
       const now = new Date();
       now.setUTCHours(9, 0, 0, 0); // Set to 9 AM UTC
-      const endDate = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()); // 1 month for testing
+      const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
       const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
       const events = [];
 
       selectedComponents.forEach(comp => {
         const schedule = MAINTENANCE_SCHEDULES[comp];
-        let currentDate = new Date(now);
+        let currentDate = new Date(now); // Start from download date/time
         const intervalMonths = schedule.interval === "3M" ? 3 : 1; // Monthly (1M) or quarterly (3M)
 
         while (currentDate <= endDate) {
@@ -254,30 +254,16 @@
           const vendorInfo = schedule.redFlag.includes("Contact your vendor") && contacts.vendor.phone
             ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
             : "";
-          const descriptionLines = [
-            `DESCRIPTION:Please ${schedule.task}.\\n${schedule.redFlag}\\n${vendorInfo}`
-          ];
-          const foldedDescription = descriptionLines.join('\r\n ').replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ');
+          const description = `Please ${schedule.task}.\\n${schedule.redFlag}\\n${vendorInfo}`;
+          const foldedDescription = description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim();
 
-          events.push(`BEGIN:VEVENT
-DTSTAMP:${dtstamp}
-UID:${uid}
-DTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DURATION:P1D
-SUMMARY:Reminder - ${schedule.task} for ${schedule.label}
-${foldedDescription}
-BEGIN:VALARM
-TRIGGER:-PT0H
-ACTION:DISPLAY
-DESCRIPTION:Reminder - ${schedule.task} for ${schedule.label}
-END:VALARM
-END:VEVENT`);
-          currentDate.setMonth(currentDate.getMonth() + intervalMonths);
+          events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:Reminder - ${schedule.task} for ${schedule.label}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:Reminder - ${schedule.task} for ${schedule.label}\r\nEND:VALARM\r\nEND:VEVENT`);
+          currentDate.setMonth(currentDate.getMonth() + intervalMonths); // Increment by interval
         }
       });
 
       if (events.length > 0) {
-        const icsContent = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wheelchair Maintenance Reminder//EN\r\n${events.join('\r\n')}\r\nEND:VCALENDAR`;
+        const icsContent = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wheelchair Maintenance Reminder//EN\r\n${events.join('')}\r\nEND:VCALENDAR`;
 
         try {
           const blob = new Blob([icsContent], { type: 'text/calendar' });
@@ -316,12 +302,12 @@ END:VEVENT`);
 
     function turnOnReminders() {
       if (selectedComponents.length > 0) {
-        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 1 month of schedules will be generated for testing (expand to 1 year if successful).")) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 1 year of schedules will be generated.")) {
           remindersEnabled = true;
           localStorage.setItem(`remindersEnabled_${profileId}`, "true");
           generateICS(); // Generate and download ICS file
           document.getElementById("calendar-instructions").style.display = "block"; // Show instructions
-          alert("Reminders turned on; download the calendar file and import it into your calendar app.");
+          alert("Reminders turned on; download the calendar file and import it into your calendar app for the next 1 year.");
         }
       } else {
         alert("Please select at least one piece of equipment to enable reminders.");
