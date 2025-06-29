@@ -81,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app.</p>
-        <p><strong>Note:</strong> Reminders will appear based on the maintenance schedule for your selected equipment.</p>
+        <p><strong>Note:</strong> Reminders will appear based on the maintenance schedule for your selected equipment over the next 5 years.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="since-date" id="since-date"></div>
@@ -239,27 +239,33 @@
 
     function generateICS() {
       const now = new Date();
-      const events = selectedComponents.map(comp => {
+      const endDate = new Date(now.getFullYear() + 5, now.getMonth(), now.getDate()); // 5 years from now
+      const events = [];
+
+      selectedComponents.forEach(comp => {
         const schedule = MAINTENANCE_SCHEDULES[comp];
-        const start = new Date(now);
-        const interval = schedule.interval === "3M" ? 3 : 1; // Monthly (1M) or quarterly (3M)
-        const vendorInfo = schedule.redFlag.includes("Contact vendor") && contacts.vendor.phone
-          ? `Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
-          : "";
-        return `BEGIN:VEVENT
-DTSTART:${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DURATION:P${interval}M
+        let currentDate = new Date(now);
+        const intervalMonths = schedule.interval === "3M" ? 3 : 1; // Monthly (1M) or quarterly (3M)
+
+        while (currentDate <= endDate) {
+          const vendorInfo = schedule.redFlag.includes("Contact your vendor") && contacts.vendor.phone
+            ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
+            : "";
+          events.push(`BEGIN:VEVENT
+DTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DURATION:P1D
 SUMMARY:Reminder - ${schedule.task} for ${schedule.label}
 DESCRIPTION:Please ${schedule.task}.\n${schedule.redFlag}\n${vendorInfo}
-RRULE:FREQ=MONTHLY;INTERVAL=${interval}
-END:VEVENT`;
-      }).join('\n');
+END:VEVENT`);
+          currentDate.setMonth(currentDate.getMonth() + intervalMonths);
+        }
+      });
 
-      if (events) {
+      if (events.length > 0) {
         const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Wheelchair Maintenance Reminder//EN
-${events}
+${events.join('\n')}
 END:VCALENDAR`;
 
         const blob = new Blob([icsContent], { type: 'text/calendar' });
@@ -288,12 +294,12 @@ END:VCALENDAR`;
 
     function turnOnReminders() {
       if (selectedComponents.length > 0) {
-        if (confirm("Are you sure you want to turn on reminders? A custom calendar file will be generated for your selected equipment.")) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 5 years of schedules will be generated.")) {
           remindersEnabled = true;
           localStorage.setItem(`remindersEnabled_${profileId}`, "true");
           generateICS(); // Generate and download ICS file
           document.getElementById("calendar-instructions").style.display = "block"; // Show instructions
-          alert("Reminders turned on; download the calendar file and import it into your calendar app.");
+          alert("Reminders turned on; download the calendar file and import it into your calendar app for the next 5 years.");
         }
       } else {
         alert("Please select at least one piece of equipment to enable reminders.");
