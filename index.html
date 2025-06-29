@@ -72,9 +72,20 @@
       <div class="nav-buttons">
         <!-- Removed "Home" button from profile -->
       </div>
+      <div class="label">Reminder Email (Optional)</div>
+      <input type="email" id="reminder-email" placeholder="Enter email for calendar reminders" style="margin-top: 0.5rem;">
       <button id="turn-off-reminders-profile" class="turn-off-button">Turn Off Reminders</button>
       <button id="turn-on-reminders-profile" class="turn-on-button">Turn On Reminders</button>
       <button id="reset-data-profile" class="reset-button">Reset/Erase Data</button>
+      <div class="instructions" id="calendar-instructions">
+        <h3>How to Add Your Reminder Schedule</h3>
+        <p>1. Click the "Download Reminder Schedule" button below to download your custom calendar file.</p>
+        <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
+        <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
+        <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app.</p>
+        <p><strong>Note:</strong> Reminders will appear based on the maintenance schedule for your equipment.</p>
+        <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
+      </div>
       <div class="since-date" id="since-date"></div>
     </div>
     <div id="admin-data" class="card hidden">
@@ -90,18 +101,18 @@
   </div>
   <script>
     const MAINTENANCE_SCHEDULES = {
-      "Rigid Ultra-Light Manual Wheelchair": { label: "Rigid Ultra-Light Manual Wheelchair", task: "Check camber plug clamps", redFlag: "Contact vendor if loose" },
-      "Folding Ultra-Light Manual Wheelchair": { label: "Folding Ultra-Light Manual Wheelchair", task: "Check folding mechanism", redFlag: "Contact vendor if sticks" },
-      "Hand-Rim Activated Power Assist": { label: "Hand-Rim Activated Power Assist", task: "Check battery capacity", redFlag: "Contact dealer if fails" },
-      "Detachable Power Assist": { label: "Detachable Power Assist", task: "Inspect components", redFlag: "Contact dealer if damaged" },
-      "Power Wheelchair with Power Seating Functions": { label: "Power Wheelchair with Power Seating Functions", task: "Check battery level", redFlag: "Contact vendor if fails" },
-      "Power Wheelchair without Power Seating Functions": { label: "Power Wheelchair without Power Seating Functions", task: "Check tires", redFlag: "Contact vendor if pressure drops" },
-      "Air Backrest Cushion": { label: "Air Backrest Cushion", task: "Check air inserts", redFlag: "Contact vendor if leaks" },
-      "Foam Backrest Cushion": { label: "Foam Backrest Cushion", task: "Inspect foam pad", redFlag: "Contact vendor if degraded" },
-      "Gel Backrest Cushion": { label: "Gel Backrest Cushion", task: "Inspect gel pad", redFlag: "Contact vendor if degraded" },
-      "Air Seat Cushion": { label: "Air Seat Cushion", task: "Check air cells", redFlag: "Contact vendor if punctures" },
-      "Foam Seat Cushion": { label: "Foam Seat Cushion", task: "Inspect foam", redFlag: "Contact vendor if degraded" },
-      "Gel Seat Cushion": { label: "Gel Seat Cushion", task: "Inspect fluid pad", redFlag: "Contact vendor if leaks" }
+      "Rigid Ultra-Light Manual Wheelchair": { label: "Rigid Ultra-Light Manual Wheelchair", task: "Check camber plug clamps", redFlag: "Contact vendor if loose", interval: "1M" },
+      "Folding Ultra-Light Manual Wheelchair": { label: "Folding Ultra-Light Manual Wheelchair", task: "Check folding mechanism", redFlag: "Contact vendor if sticks", interval: "1M" },
+      "Hand-Rim Activated Power Assist": { label: "Hand-Rim Activated Power Assist", task: "Check battery capacity", redFlag: "Contact dealer if fails", interval: "1M" },
+      "Detachable Power Assist": { label: "Detachable Power Assist", task: "Inspect components", redFlag: "Contact dealer if damaged", interval: "1M" },
+      "Power Wheelchair with Power Seating Functions": { label: "Power Wheelchair with Power Seating Functions", task: "Check battery level", redFlag: "Contact vendor if fails", interval: "1M" },
+      "Power Wheelchair without Power Seating Functions": { label: "Power Wheelchair without Power Seating Functions", task: "Check tires", redFlag: "Contact vendor if pressure drops", interval: "1M" },
+      "Air Backrest Cushion": { label: "Air Backrest Cushion", task: "Check air inserts", redFlag: "Contact vendor if leaks", interval: "3M" },
+      "Foam Backrest Cushion": { label: "Foam Backrest Cushion", task: "Inspect foam pad", redFlag: "Contact vendor if degraded", interval: "3M" },
+      "Gel Backrest Cushion": { label: "Gel Backrest Cushion", task: "Inspect gel pad", redFlag: "Contact vendor if degraded", interval: "3M" },
+      "Air Seat Cushion": { label: "Air Seat Cushion", task: "Check air cells", redFlag: "Contact vendor if punctures", interval: "3M" },
+      "Foam Seat Cushion": { label: "Foam Seat Cushion", task: "Inspect foam", redFlag: "Contact vendor if degraded", interval: "3M" },
+      "Gel Seat Cushion": { label: "Gel Seat Cushion", task: "Inspect fluid pad", redFlag: "Contact vendor if leaks", interval: "3M" }
     };
 
     let selectedComponents = [];
@@ -116,7 +127,7 @@
     let startDate = localStorage.getItem(`startDate_${profileId}`) || new Date().toLocaleDateString();
     let currentStep = localStorage.getItem(`currentStep_${profileId}`) || "selection";
     let remindersEnabled = localStorage.getItem(`remindersEnabled_${profileId}`) !== "false";
-    let lastNotified = localStorage.getItem(`lastNotified_${profileId}`) || 0;
+    let reminderEmail = localStorage.getItem(`reminderEmail_${profileId}`) || "";
 
     function generateProfileId() {
       try {
@@ -138,6 +149,8 @@
       updateSinceDate();
       updateProfileList();
       updateEquipmentList();
+      document.getElementById("reminder-email").value = reminderEmail; // Update email field
+      document.getElementById("calendar-instructions").style.display = remindersEnabled ? "block" : "none"; // Show instructions if reminders enabled
     }
 
     function updateSinceDate() {
@@ -161,7 +174,7 @@
         localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
         localStorage.setItem(`currentStep_${profileId}`, currentStep);
         localStorage.setItem(`remindersEnabled_${profileId}`, remindersEnabled);
-        localStorage.setItem(`lastNotified_${profileId}`, lastNotified);
+        localStorage.setItem(`reminderEmail_${profileId}`, reminderEmail);
         // Update category counts
         Object.keys(mobilityBaseCount).forEach(key => mobilityBaseCount[key] = 0);
         Object.keys(backrestCount).forEach(key => backrestCount[key] = 0);
@@ -227,36 +240,38 @@
       currentStep = "profile"; // Redirect to profile on Finish
       updateDisplay();
       saveData();
-      if (remindersEnabled && typeof Notification !== "undefined" && !isIOSChrome()) {
-        if (Notification.permission !== "granted") {
-          Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-              sendNotifications();
-            }
-          });
-        } else {
-          sendNotifications();
-        }
-      } else if (remindersEnabled && isIOSChrome()) {
-        checkAndShowAlert();
-      }
     }
 
-    function sendNotifications() {
-      if (remindersEnabled) {
-        selectedComponents.forEach(component => {
-          const schedule = MAINTENANCE_SCHEDULES[component];
-          if (schedule && schedule.task) {
-            let body = `${schedule.label} - ${schedule.redFlag}`;
-            if (schedule.redFlag.includes("Contact vendor") && contacts.vendor.phone) {
-              body += `; Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`;
-            } else if (schedule.redFlag.includes("Contact dealer") && contacts.therapist.phone) {
-              body += `; Therapist: ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email} (${contacts.therapist.hospital})`;
-            }
-            new Notification(`Reminder: ${schedule.task}`, { body });
-          }
-        });
-      }
+    function generateICS() {
+      const now = new Date();
+      const events = selectedComponents.map(comp => {
+        const schedule = MAINTENANCE_SCHEDULES[comp];
+        const start = new Date(now);
+        const interval = schedule.interval === "3M" ? 3 : 1; // Monthly (1M) or quarterly (3M)
+        return `BEGIN:VEVENT
+DTSTART:${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DURATION:P${interval}M
+SUMMARY:Reminder - ${schedule.task} for ${schedule.label}
+DESCRIPTION:${schedule.label} - ${schedule.redFlag}\n${schedule.redFlag.includes("Contact vendor") && contacts.vendor.phone ? `Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}` : ''}${schedule.redFlag.includes("Contact dealer") && contacts.therapist.phone ? `Therapist: ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email} (${contacts.therapist.hospital})` : ''}
+RRULE:FREQ=MONTHLY;INTERVAL=${interval}
+END:VEVENT`;
+      }).join('\n');
+
+      const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wheelchair Maintenance Reminder//EN
+${events}
+END:VCALENDAR`;
+
+      const blob = new Blob([icsContent], { type: 'text/calendar' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `wheelchair_maintenance_${profileId}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     }
 
     function turnOffReminders() {
@@ -265,55 +280,26 @@
       disableCount++;
       localStorage.setItem("disableCount", disableCount);
       document.getElementById("disable-count").textContent = disableCount;
+      reminderEmail = ""; // Clear email on disable
+      localStorage.setItem(`reminderEmail_${profileId}`, "");
+      document.getElementById("calendar-instructions").style.display = "none"; // Hide instructions
       alert("Reminders have been turned off.");
     }
 
     function turnOnReminders() {
-      if (typeof Notification !== "undefined" && !isIOSChrome()) {
-        if (confirm("Are you sure you want to turn on reminders? This will enable notifications.")) {
+      const email = document.getElementById("reminder-email").value.trim();
+      if (email) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file will be generated for " + email + ".")) {
           remindersEnabled = true;
+          reminderEmail = email;
           localStorage.setItem(`remindersEnabled_${profileId}`, "true");
-          if (Notification.permission !== "granted") {
-            Notification.requestPermission().then(permission => {
-              if (permission === "granted") {
-                sendNotifications();
-                alert("Reminders turned on and notifications sent.");
-              } else {
-                remindersEnabled = false;
-                localStorage.setItem(`remindersEnabled_${profileId}`, "false");
-                alert("Notifications not enabled. Please allow in settings.");
-              }
-            });
-          } else {
-            sendNotifications();
-            alert("Reminders turned on and notifications sent.");
-          }
-        }
-      } else if (isIOSChrome()) {
-        if (confirm("Are you sure you want to turn on reminders? Notifications are not supported in Chrome on iOS; alerts will be used instead.")) {
-          remindersEnabled = true;
-          localStorage.setItem(`remindersEnabled_${profileId}`, "true");
-          checkAndShowAlert();
-          alert("Reminders turned on; alerts will appear periodically.");
+          localStorage.setItem(`reminderEmail_${profileId}`, email);
+          generateICS(); // Generate and download ICS file
+          document.getElementById("calendar-instructions").style.display = "block"; // Show instructions
+          alert("Reminders turned on; download the calendar file and import it into your calendar app.");
         }
       } else {
-        alert("This browser does not support notifications.");
-      }
-    }
-
-    function isIOSChrome() {
-      return /iP(ad|hone|od)/.test(navigator.userAgent) && /CriOS/.test(navigator.userAgent);
-    }
-
-    function checkAndShowAlert() {
-      const now = Date.now();
-      const twentyFourHours = 24 * 60 * 60 * 1000;
-      if (remindersEnabled && now - lastNotified > twentyFourHours) {
-        const sampleComponent = selectedComponents[0] || "your equipment";
-        const sampleSchedule = MAINTENANCE_SCHEDULES[sampleComponent] || { task: "check your equipment", redFlag: "contact support" };
-        alert(`Reminder: ${sampleSchedule.task}\n${sampleComponent} - ${sampleSchedule.redFlag}`);
-        lastNotified = now;
-        localStorage.setItem(`lastNotified_${profileId}`, lastNotified);
+        alert("Please enter an email address for reminders.");
       }
     }
 
@@ -376,16 +362,12 @@
       document.getElementById("disable-count").textContent = disableCount;
     }
 
-    // Initialize on load and set up alert check
+    // Initialize on load
     document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("profileId", profileId);
       updateDisplay();
       saveData();
       updateAdminStats();
-      if (remindersEnabled && isIOSChrome()) {
-        checkAndShowAlert(); // Initial check on load
-        setInterval(checkAndShowAlert, 24 * 60 * 60 * 1000); // Check every 24 hours
-      }
 
       document.querySelectorAll("#home-button").forEach(btn => btn.addEventListener("click", goHome));
       document.getElementById("next-to-contact").addEventListener("click", goNext);
@@ -394,6 +376,7 @@
       document.getElementById("turn-off-reminders-profile").addEventListener("click", turnOffReminders);
       document.getElementById("turn-on-reminders-profile").addEventListener("click", turnOnReminders);
       document.getElementById("reset-data-profile").addEventListener("click", resetData);
+      document.getElementById("download-ics").addEventListener("click", generateICS);
     });
   </script>
 </body>
