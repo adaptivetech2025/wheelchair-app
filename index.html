@@ -81,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9 AM on the event day.</p>
-        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year.</p>
+        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year. If download fails in Safari, try a different browser or deploy to a secure server.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="since-date" id="since-date"></div>
@@ -240,7 +240,7 @@
     function generateICS() {
       const now = new Date();
       now.setUTCHours(9, 0, 0, 0); // Set to 9 AM UTC
-      const endDate = new Date(now.getFullYear(), now.getMonth() + 6, now.getDate()); // 6 months for testing, adjust to 12 if successful
+      const endDate = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()); // 1 month for testing
       const events = [];
 
       selectedComponents.forEach(comp => {
@@ -285,7 +285,7 @@ END:VCALENDAR`;
           document.body.removeChild(a);
           window.URL.revokeObjectURL(url);
         } catch (e) {
-          // Fallback for Safari
+          console.error("Blob error:", e);
           const dataUri = `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
           const a = document.createElement('a');
           a.href = dataUri;
@@ -311,7 +311,7 @@ END:VCALENDAR`;
 
     function turnOnReminders() {
       if (selectedComponents.length > 0) {
-        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 6 months of schedules will be generated for testing (adjust to 1 year if successful).")) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with 1 month of schedules will be generated for testing (expand to 1 year if successful).")) {
           remindersEnabled = true;
           localStorage.setItem(`remindersEnabled_${profileId}`, "true");
           generateICS(); // Generate and download ICS file
