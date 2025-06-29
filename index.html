@@ -81,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9 AM on the event day.</p>
-        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year. If download fails in Safari, try a different browser or deploy to a secure server.</p>
+        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year. If download fails in Safari, try a different browser or deploy to a secure server like Vercel.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="since-date" id="since-date"></div>
@@ -241,6 +241,7 @@
       const now = new Date();
       now.setUTCHours(9, 0, 0, 0); // Set to 9 AM UTC
       const endDate = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()); // 1 month for testing
+      const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
       const events = [];
 
       selectedComponents.forEach(comp => {
@@ -249,14 +250,22 @@
         const intervalMonths = schedule.interval === "3M" ? 3 : 1; // Monthly (1M) or quarterly (3M)
 
         while (currentDate <= endDate) {
+          const uid = `${profileId}-${currentDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
           const vendorInfo = schedule.redFlag.includes("Contact your vendor") && contacts.vendor.phone
             ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
             : "";
+          const descriptionLines = [
+            `DESCRIPTION:Please ${schedule.task}.\\n${schedule.redFlag}\\n${vendorInfo}`
+          ];
+          const foldedDescription = descriptionLines.join('\r\n ').replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ');
+
           events.push(`BEGIN:VEVENT
+DTSTAMP:${dtstamp}
+UID:${uid}
 DTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DURATION:P1D
 SUMMARY:Reminder - ${schedule.task} for ${schedule.label}
-DESCRIPTION:Please ${schedule.task}.\n${schedule.redFlag}\n${vendorInfo}
+${foldedDescription}
 BEGIN:VALARM
 TRIGGER:-PT0H
 ACTION:DISPLAY
@@ -268,11 +277,7 @@ END:VEVENT`);
       });
 
       if (events.length > 0) {
-        const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Wheelchair Maintenance Reminder//EN
-${events.join('\n')}
-END:VCALENDAR`;
+        const icsContent = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wheelchair Maintenance Reminder//EN\r\n${events.join('\r\n')}\r\nEND:VCALENDAR`;
 
         try {
           const blob = new Blob([icsContent], { type: 'text/calendar' });
