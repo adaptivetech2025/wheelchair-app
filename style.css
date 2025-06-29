@@ -81,9 +81,9 @@ h1 {
 .turn-on-button:hover {
   background-color: #059669; /* Darker green on hover */
 }
-.turn-off-button {
+.reset-button {
   width: 100%;
-  background-color: #ef4444;
+  background-color: #ef4444; /* Red color */
   color: #ffffff;
   padding: 0.75rem;
   border-radius: 0.375rem;
@@ -92,10 +92,10 @@ h1 {
   font-size: 1rem;
   margin-top: 1rem;
 }
-.turn-off-button:hover {
-  background-color: #dc2626;
+.reset-button:hover {
+  background-color: #dc2626; /* Darker red on hover */
 }
-.reset-button {
+.faq-button {
   width: 100%;
   background-color: #F59E0B; /* Yellow color */
   color: #ffffff;
@@ -106,7 +106,7 @@ h1 {
   font-size: 1rem;
   margin-top: 1rem;
 }
-.reset-button:hover {
+.faq-button:hover {
   background-color: #D97706; /* Darker yellow on hover */
 }
 .profile, .contact-card, .reminders {
@@ -210,12 +210,19 @@ th {
   font-size: 0.9rem;
   margin: 0.5rem 0;
 }
+.disclaimer {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #666;
+  margin-top: 1rem;
+  text-align: center;
+}
 @media (max-width: 480px) {
   .card {
     min-width: 20rem;
     padding: 1.5rem;
   }
-  .button, .turn-on-button, .turn-off-button, .reset-button {
+  .button, .turn-on-button, .reset-button, .faq-button {
     padding: 0.5rem;
     font-size: 0.9rem;
   }
