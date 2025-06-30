@@ -81,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings; instructions may differ depending on your browser).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9:00 AM in your local time zone.</p>
-        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year, spaced according to weekly, monthly, 3-month, 6-month, and yearly intervals starting from the download date.</p>
+        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year, with one event per interval (weekly, monthly, 3-month, 6-month, yearly) listing all due tasks.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="disclaimer">
@@ -437,7 +437,7 @@
       const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
       const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; // Keep DTSTAMP in UTC for compatibility
       const events = [];
-      const maxEvents = 100; // Safeguard to prevent browser overload
+      const maxEvents = 5; // One event per interval (weekly, monthly, 3-month, 6-month, yearly)
       let eventCount = 0;
 
       // Define intervals to process
@@ -449,45 +449,41 @@
         "1Y": { days: 365, maxIterations: 1 }  // Yearly, 1 time
       };
 
-      // Group tasks by interval and component
-      const tasksByInterval = {};
+      // Collect all tasks for each interval across all components
+      const allTasksByInterval = {};
       selectedComponents.forEach(comp => {
         const schedule = MAINTENANCE_SCHEDULES[comp];
         if (Array.isArray(schedule.tasks)) {
           schedule.tasks.forEach(task => {
             if (["1W", "1M", "3M", "6M", "1Y"].includes(task.interval)) {
-              if (!tasksByInterval[task.interval]) tasksByInterval[task.interval] = {};
-              if (!tasksByInterval[task.interval][comp]) tasksByInterval[task.interval][comp] = [];
-              tasksByInterval[task.interval][comp].push({ task: task.task, redFlag: task.redFlag });
+              if (!allTasksByInterval[task.interval]) allTasksByInterval[task.interval] = [];
+              allTasksByInterval[task.interval].push({ comp: comp, task: task.task, redFlag: task.redFlag });
             }
           });
         }
       });
 
-      // Generate events for each interval
+      // Generate one event per interval with all tasks
       Object.keys(intervals).forEach(interval => {
         let currentDate = new Date(now);
         let { days, maxIterations } = intervals[interval];
         let iteration = 0;
 
         while (currentDate <= endDate && iteration < maxIterations && eventCount < maxEvents) {
-          Object.keys(tasksByInterval[interval] || {}).forEach(comp => {
-            const tasks = tasksByInterval[interval][comp];
-            if (tasks.length > 0 && eventCount < maxEvents) {
-              console.log(`Generating event for ${comp} at ${currentDate.toISOString()} for interval ${interval}`);
-              const uid = `${profileId}-${currentDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
-              const schedule = MAINTENANCE_SCHEDULES[comp];
-              const taskList = tasks.map(t => ` - ${t.task} (${t.redFlag ? t.redFlag : "No issues noted"})`).join("\\n");
-              const vendorInfo = contacts.vendor.phone ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}` : "";
-              const therapistInfo = contacts.therapist.phone ? `Therapist Contact: ${contacts.therapist.hospital}, ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email}` : "";
-              const description = `Please complete the following for ${schedule.label}:\\n${taskList}\\n${vendorInfo}\\n${therapistInfo}`;
-              const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
-              const summary = `Reminder - Maintenance for ${schedule.label} (${interval === "1W" ? "Weekly" : interval === "1M" ? "Monthly" : interval === "3M" ? "Every 3 Months" : interval === "6M" ? "Every 6 Months" : "Yearly"})`;
+          const tasks = allTasksByInterval[interval] || [];
+          if (tasks.length > 0 && eventCount < maxEvents) {
+            console.log(`Generating event at ${currentDate.toISOString()} for interval ${interval}`);
+            const uid = `${profileId}-${currentDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
+            const taskList = tasks.map(t => ` - ${t.comp}: ${t.task} (${t.redFlag ? t.redFlag : "No issues noted"})`).join("\\n");
+            const vendorInfo = contacts.vendor.phone ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}` : "";
+            const therapistInfo = contacts.therapist.phone ? `Therapist Contact: ${contacts.therapist.hospital}, ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email}` : "";
+            const description = `Please complete the following maintenance tasks:\\n${taskList}\\n${vendorInfo}\\n${therapistInfo}`;
+            const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
+            const summary = `Mobility Equipment Maintenance Due (${interval === "1W" ? "Weekly" : interval === "1M" ? "Monthly" : interval === "3M" ? "Every 3 Months" : interval === "6M" ? "Every 6 Months" : "Yearly"})`;
 
-              events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:${summary}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:${summary}\r\nEND:VALARM\r\nEND:VEVENT`);
-              eventCount++;
-            }
-          });
+            events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:${summary}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:${summary}\r\nEND:VALARM\r\nEND:VEVENT`);
+            eventCount++;
+          }
           currentDate.setDate(currentDate.getDate() + days);
           iteration++;
         }
