@@ -80,7 +80,7 @@
         <p>1. Click the "Download Reminder Schedule" button below to download your custom calendar file, or the download will automatically begin once you select the “Turn On Reminders” button.</p>
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings; instructions may differ depending on your browser).</p>
-        <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9 AM on the event day.</p>
+        <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9:00 AM in your local time zone.</p>
         <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year, spaced according to weekly, monthly, 3-month, 6-month, and yearly intervals starting from the download date.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
@@ -432,10 +432,10 @@
     }
 
     function generateICS() {
-      const now = new Date();
-      now.setUTCHours(9, 0, 0, 0); // Set to 9 AM UTC
+      const now = new Date(); // Use local time
+      now.setHours(9, 0, 0, 0); // Set to 9:00 AM local time
       const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
-      const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; // Keep DTSTAMP in UTC for compatibility
       const events = [];
       const maxEvents = 100; // Safeguard to prevent browser overload
       let eventCount = 0;
