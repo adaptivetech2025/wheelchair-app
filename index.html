@@ -440,6 +440,15 @@
       const maxEvents = 100; // Safeguard to prevent browser overload
       let eventCount = 0;
 
+      // Define intervals to process
+      const intervals = {
+        "1W": { days: 7, maxIterations: 52 }, // Weekly, ~52 weeks
+        "1M": { days: 30, maxIterations: 12 }, // Monthly, ~12 months
+        "3M": { days: 90, maxIterations: 4 },  // Every 3 months, ~4 times
+        "6M": { days: 180, maxIterations: 2 }, // Every 6 months, ~2 times
+        "1Y": { days: 365, maxIterations: 1 }  // Yearly, 1 time
+      };
+
       // Group tasks by interval and component
       const tasksByInterval = {};
       selectedComponents.forEach(comp => {
@@ -456,21 +465,13 @@
       });
 
       // Generate events for each interval
-      Object.keys(tasksByInterval).forEach(interval => {
-        let intervalDays = 0;
-        switch (interval) {
-          case "1W": intervalDays = 7; break;
-          case "1M": intervalDays = 30; break;
-          case "3M": intervalDays = 90; break;
-          case "6M": intervalDays = 180; break;
-          case "1Y": intervalDays = 365; break;
-        }
+      Object.keys(intervals).forEach(interval => {
         let currentDate = new Date(now);
-        const maxIterations = Math.ceil(365 / intervalDays);
+        let { days, maxIterations } = intervals[interval];
         let iteration = 0;
 
         while (currentDate <= endDate && iteration < maxIterations && eventCount < maxEvents) {
-          Object.keys(tasksByInterval[interval]).forEach(comp => {
+          Object.keys(tasksByInterval[interval] || {}).forEach(comp => {
             const tasks = tasksByInterval[interval][comp];
             if (tasks.length > 0 && eventCount < maxEvents) {
               console.log(`Generating event for ${comp} at ${currentDate.toISOString()} for interval ${interval}`);
@@ -487,7 +488,7 @@
               eventCount++;
             }
           });
-          currentDate.setDate(currentDate.getDate() + intervalDays);
+          currentDate.setDate(currentDate.getDate() + days);
           iteration++;
         }
       });
