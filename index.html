@@ -363,7 +363,7 @@
     let disableCount = parseInt(localStorage.getItem("disableCount") || "0");
     let mobilityBaseCount = JSON.parse(localStorage.getItem("mobilityBaseCount") || '{"n/a": 0, "Rigid Ultra-Light Manual Wheelchair": 0, "Folding Ultra-Light Manual Wheelchair": 0, "Power Wheelchair with Power Seating Functions": 0, "Power Wheelchair without Power Seating Functions": 0, "Tilt in Space Manual Wheelchair": 0, "Hand-Rim Activated Power Assist": 0, "Detachable Power Assist": 0}');
     let backrestCount = JSON.parse(localStorage.getItem("backrestCount") || '{"n/a": 0, "Air Backrest Cushion": 0, "Foam Backrest Cushion": 0, "Gel Backrest Cushion": 0}');
-    let seatCount = JSON.parse(localStorage.getItem("seatCount") || '{"n/a": 0, "Air Seat Cushion": 0, "Foam Seat Cushion": 0, "Gel Seat Cushion": 0}');
+    let seatCount = JSON.parse(localStorage.getItem("seat-count") || '{"n/a": 0, "Air Seat Cushion": 0, "Foam Seat Cushion": 0, "Gel Seat Cushion": 0}');
     let startDate = localStorage.getItem(`startDate_${profileId}`) || new Date().toLocaleDateString();
     let currentStep = localStorage.getItem(`currentStep_${profileId}`) || "selection";
     let remindersEnabled = localStorage.getItem(`remindersEnabled_${profileId}`) !== "false";
@@ -485,23 +485,28 @@
       const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
       const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
       const events = [];
+      let eventCount = 0;
+      const maxEvents = 500; // Safeguard to prevent browser overload
 
       selectedComponents.forEach(comp => {
         const schedule = MAINTENANCE_SCHEDULES[comp];
         let currentDate = new Date(now); // Start from download date/time
         if (Array.isArray(schedule.tasks)) {
           schedule.tasks.forEach(task => {
-            let intervalMonths = 0;
+            let intervalDays = 0;
             switch (task.interval) {
-              case "1D": intervalMonths = 1 / 30.4167; break; // Approx. 1 day in months
-              case "1W": intervalMonths = 0.23013698; break; // Approx. 1 week in months
-              case "1M": intervalMonths = 1; break;
-              case "3M": intervalMonths = 3; break;
-              case "6M": intervalMonths = 6; break;
-              case "1Y": intervalMonths = 12; break;
+              case "1D": intervalDays = 1; break;
+              case "1W": intervalDays = 7; break;
+              case "1M": intervalDays = 30; break;
+              case "3M": intervalDays = 90; break;
+              case "6M": intervalDays = 180; break;
+              case "1Y": intervalDays = 365; break;
             }
             let nextDate = new Date(currentDate);
-            while (nextDate <= endDate) {
+            let iteration = 0;
+            const maxIterations = Math.min(Math.ceil(365 / intervalDays), 52); // Cap to ~1 year or 52 weeks
+            while (nextDate <= endDate && iteration < maxIterations && eventCount < maxEvents) {
+              console.log(`Generating event for ${task.task} at ${nextDate.toISOString()}`);
               const uid = `${profileId}-${nextDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
               const vendorInfo = task.redFlag.includes("Contact your vendor") && contacts.vendor.phone
                 ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
@@ -512,12 +517,17 @@
               const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
 
               events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${nextDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:Reminder - ${task.task} for ${schedule.label}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:Reminder - ${task.task} for ${schedule.label}\r\nEND:VALARM\r\nEND:VEVENT`);
-              nextDate.setMonth(nextDate.getMonth() + intervalMonths);
+              nextDate.setDate(nextDate.getDate() + intervalDays);
+              iteration++;
+              eventCount++;
             }
           });
         } else {
-          const intervalMonths = schedule.interval === "3M" ? 3 : 1; // Default to monthly for single-task items
-          while (currentDate <= endDate) {
+          const intervalDays = schedule.interval === "3M" ? 90 : 30; // Default to monthly
+          let iteration = 0;
+          const maxIterations = Math.ceil(365 / intervalDays);
+          while (currentDate <= endDate && iteration < maxIterations && eventCount < maxEvents) {
+            console.log(`Generating event for ${schedule.task} at ${currentDate.toISOString()}`);
             const uid = `${profileId}-${currentDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
             const vendorInfo = schedule.redFlag.includes("Contact your vendor") && contacts.vendor.phone
               ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
@@ -528,10 +538,16 @@
             const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
 
             events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:Reminder - ${schedule.task} for ${schedule.label}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:Reminder - ${schedule.task} for ${schedule.label}\r\nEND:VALARM\r\nEND:VEVENT`);
-            currentDate.setMonth(currentDate.getMonth() + intervalMonths);
+            currentDate.setMonth(currentDate.getMonth() + (intervalDays / 30));
+            iteration++;
+            eventCount++;
           }
         }
       });
+
+      if (eventCount >= maxEvents) {
+        console.warn(`Event limit (${maxEvents}) reached, some reminders may be omitted.`);
+      }
 
       if (events.length > 0) {
         const icsContent = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wheelchair Maintenance Reminder//EN\r\n${events.join('\r\n')}\r\nEND:VCALENDAR`;
@@ -546,15 +562,10 @@
           a.click();
           document.body.removeChild(a);
           window.URL.revokeObjectURL(url);
+          console.log(`Generated ${eventCount} events successfully.`);
         } catch (e) {
           console.error("Blob error:", e);
-          const dataUri = `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
-          const a = document.createElement('a');
-          a.href = dataUri;
-          a.download = `wheelchair_maintenance_${profileId}.ics`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          alert("Failed to generate reminder schedule. Please try again or contact bperkins@metrohealth.org for support.");
         }
       } else {
         alert("No equipment selected to generate a reminder schedule.");
