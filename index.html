@@ -81,7 +81,7 @@
         <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
         <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the app settings; instructions may differ depending on your browser).</p>
         <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9 AM on the event day.</p>
-        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year, spaced according to maintenance intervals starting from the download date.</p>
+        <p><strong>Note:</strong> This schedule covers maintenance reminders for your selected equipment over the next 1 year, spaced according to weekly, monthly, 3-month, 6-month, and yearly intervals starting from the download date.</p>
         <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
       </div>
       <div class="disclaimer">
@@ -147,20 +147,6 @@
       "Power Wheelchair with Power Seating Functions": { 
         label: "Power Wheelchair with Power Seating Functions",
         tasks: [
-          { task: "Check battery level indicator and charge if necessary", redFlag: "Contact vendor if indicator fails", interval: "1D" },
-          { task: "Ensure joystick panel and control panels are not damaged", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Verify all removable parts are securely fastened", redFlag: "Contact vendor if loose", interval: "1D" },
-          { task: "Inspect positioning belts for wear and ensure buckles work", redFlag: "Contact vendor if worn", interval: "1W" },
-          { task: "Check tires for sufficient inflation if pneumatic", redFlag: "Contact vendor if pressure drops", interval: "1D" },
-          { task: "Ensure lights and turn signals are operational and clean if equipped", redFlag: "Contact vendor if not working", interval: "1D" },
-          { task: "Clean wheelchair and upholstery", redFlag: "Contact vendor if cleaning reveals damage", interval: "1D" },
-          { task: "Check joystick for damage and ensure it returns to neutral when released", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Visually inspect controller harness for fraying or exposed wires", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Check solid tires for flat spots", redFlag: "Contact vendor if flat", interval: "1D" },
-          { task: "Inspect armrests and front riggings for loose hardware or damage", redFlag: "Contact vendor if needed", interval: "1D" },
-          { task: "Ensure seating cushions and backrest are correctly fitted and adjusted", redFlag: "Contact vendor if misaligned", interval: "1D" },
-          { task: "Ensure seat interface knobs are tight and secure", redFlag: "Contact vendor if loose", interval: "1D" },
-          { task: "Consider weather conditions, noting reduced battery capacity in cold weather", redFlag: "Contact vendor if performance drops", interval: "1D" },
           { task: "Inspect positioning belts for wear and ensure buckles work", redFlag: "Contact vendor if worn", interval: "1W" },
           { task: "Check pneumatic tires for proper inflation and inflate to recommended pressure", redFlag: "Contact vendor if tire does not hold air", interval: "1W" },
           { task: "Test brakes on a level surface", redFlag: "Contact vendor if issue", interval: "1W" },
@@ -189,18 +175,6 @@
       "Power Wheelchair without Power Seating Functions": { 
         label: "Power Wheelchair without Power Seating Functions",
         tasks: [
-          { task: "Check battery level indicator and charge if necessary", redFlag: "Contact vendor if indicator fails", interval: "1D" },
-          { task: "Ensure joystick panel and control panels are not damaged", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Verify all removable parts are securely fastened", redFlag: "Contact vendor if loose", interval: "1D" },
-          { task: "Inspect positioning belts for wear and ensure buckles work", redFlag: "Contact vendor if worn", interval: "1W" },
-          { task: "Check tires for sufficient inflation if pneumatic", redFlag: "Contact vendor if pressure drops", interval: "1D" },
-          { task: "Ensure lights and turn signals are operational and clean if equipped", redFlag: "Contact vendor if not working", interval: "1D" },
-          { task: "Clean wheelchair and upholstery", redFlag: "Contact vendor if cleaning reveals damage", interval: "1D" },
-          { task: "Check joystick for damage and ensure it returns to neutral when released", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Visually inspect controller harness for fraying or exposed wires", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Check solid tires for flat spots", redFlag: "Contact vendor if flat", interval: "1D" },
-          { task: "Inspect armrests and front riggings for loose hardware or damage", redFlag: "Contact vendor if needed", interval: "1D" },
-          { task: "Consider weather conditions, noting reduced battery capacity in cold weather", redFlag: "Contact vendor if performance drops", interval: "1D" },
           { task: "Inspect positioning belts for wear and ensure buckles work", redFlag: "Contact vendor if worn", interval: "1W" },
           { task: "Check pneumatic tires for proper inflation and inflate to recommended pressure", redFlag: "Contact vendor if tire does not hold air", interval: "1W" },
           { task: "Test brakes on a level surface", redFlag: "Contact vendor if issue", interval: "1W" },
@@ -225,25 +199,28 @@
         label: "Tilt in Space Manual Wheelchair",
         tasks: [
           { task: "Ensure wheelchair rolls straight without excessive drag or pull", redFlag: "Contact vendor if issues persist", interval: "1W" },
+          { task: "Ensure hand grips are not loose", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Ensure wheel/fork assembly has proper tension when caster is spun", redFlag: "Contact vendor if wobbly", interval: "1W" },
+          { task: "Loosen/tighten caster locknut if wheel wobbles or binds", redFlag: "Contact vendor if issue persists", interval: "1W" },
+          { task: "Ensure all caster/wheel/fork/headtube fasteners are secure", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Ensure casters are free of debris", redFlag: "Contact vendor if clogged", interval: "1W" },
+          { task: "Check pneumatic tires for proper inflation", redFlag: "Contact vendor if pressure drops", interval: "1W" },
+          { task: "Ensure no excessive side movement or binding when drive wheels are lifted and spun", redFlag: "Contact vendor if wobbly", interval: "1M" },
+          { task: "Ensure sealed bearings and axle nut tension are correct", redFlag: "Contact vendor if wobbly", interval: "1M" },
+          { task: "Ensure wheel locks do not interfere with tires when rolling", redFlag: "Contact vendor if interference", interval: "1M" },
+          { task: "Ensure wheel lock pivot points are free of wear and looseness", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Ensure wheel locks are easy to engage", redFlag: "Contact vendor if difficult", interval: "1M" },
+          { task: "Inspect axles to ensure they are free from dirt, lint, etc.", redFlag: "Contact vendor if dirty", interval: "1M" },
+          { task: "Inspect tilt slides and roller bearings to ensure they are free from dirt, lint, etc.", redFlag: "Contact vendor if dirty", interval: "1M" },
+          { task: "Inspect seat positioning strap for wear, ensure buckle latches, and verify hardware is secure", redFlag: "Replace if necessary", interval: "1M" },
           { task: "Inspect clothing guards for bent or protruding metal", redFlag: "Contact vendor if damaged", interval: "6M" },
           { task: "Ensure arms are secure but easy to release", redFlag: "Contact vendor if not secure", interval: "6M" },
           { task: "Ensure adjustable height arms operate and lock securely", redFlag: "Contact vendor if fails", interval: "6M" },
           { task: "Ensure armrest upholstery has no rips", redFlag: "Contact vendor if damaged", interval: "6M" },
           { task: "Ensure armrest pad sits flush against arm tube", redFlag: "Contact vendor if misaligned", interval: "6M" },
-          { task: "Ensure hand grips are not loose", redFlag: "Contact vendor if loose", interval: "1W" },
           { task: "Ensure seat, back, and/or arm upholstery have no rips", redFlag: "Contact vendor if damaged", interval: "6M" },
           { task: "Ensure trigger release lever cables and handles return when released", redFlag: "Contact vendor if fails", interval: "6M" },
           { task: "Inspect handrims for rough edges or peeling", redFlag: "Contact vendor if damaged", interval: "6M" },
-          { task: "Ensure no excessive side movement or binding when drive wheels are lifted and spun", redFlag: "Contact vendor if wobbly", interval: "1M" },
-          { task: "Ensure sealed bearings and axle nut tension are correct", redFlag: "Contact vendor if wobbly", interval: "1M" },
-          { task: "Ensure wheel/fork assembly has proper tension when caster is spun", redFlag: "Contact vendor if wobbly", interval: "1W" },
-          { task: "Loosen/tighten caster locknut if wheel wobbles or binds", redFlag: "Contact vendor if issue persists", interval: "1W" },
-          { task: "Ensure all caster/wheel/fork/headtube fasteners are secure", redFlag: "Contact vendor if loose", interval: "1W" },
-          { task: "Ensure casters are free of debris", redFlag: "Contact vendor if clogged", interval: "1W" },
-          { task: "Ensure wheel locks do not interfere with tires when rolling", redFlag: "Contact vendor if interference", interval: "1M" },
-          { task: "Ensure wheel lock pivot points are free of wear and looseness", redFlag: "Contact vendor if worn", interval: "1M" },
-          { task: "Ensure wheel locks are easy to engage", redFlag: "Contact vendor if difficult", interval: "1M" },
-          { task: "Check pneumatic tires for proper inflation", redFlag: "Contact vendor if pressure drops", interval: "1W" },
           { task: "Check that all labels are present and legible", redFlag: "Contact vendor if missing", interval: "6M" },
           { task: "Call vendor for annual mobility base inspection and return to app to refresh reminders", redFlag: "", interval: "1Y" }
         ]
@@ -251,11 +228,6 @@
       "Hand-Rim Activated Power Assist": { 
         label: "Hand-Rim Activated Power Assist",
         tasks: [
-          { task: "Check battery charge level and recharge if necessary", redFlag: "Contact vendor if fails", interval: "1D" },
-          { task: "Visually inspect hand-rim power assist unit for damage, wear, or loose components", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Ensure hand-rim activation mechanism responds correctly", redFlag: "Contact vendor if not smooth", interval: "1D" },
-          { task: "Verify power assist unit is securely attached to wheelchair frame", redFlag: "Contact vendor if loose", interval: "1D" },
-          { task: "Test brakes by engaging and disengaging", redFlag: "Contact vendor if fails", interval: "1D" },
           { task: "Clean power assist unit, including hand-rims and motors, with damp cloth", redFlag: "Contact vendor if cleaning reveals damage", interval: "1W" },
           { task: "Check all electrical connections and cables for wear or damage", redFlag: "Contact vendor if damaged", interval: "1W" },
           { task: "Inspect hand-rims for smooth operation and check for rough edges", redFlag: "Contact vendor if unsafe", interval: "1W" },
@@ -270,10 +242,6 @@
       "Detachable Power Assist": { 
         label: "Detachable Power Assist",
         tasks: [
-          { task: "Check battery charge level and recharge if necessary", redFlag: "Contact vendor if fails", interval: "1D" },
-          { task: "Visually inspect power assist unit for damage, wear, or loose components", redFlag: "Contact vendor if damaged", interval: "1D" },
-          { task: "Ensure control panel and joystick are functioning correctly", redFlag: "Contact vendor if not responsive", interval: "1D" },
-          { task: "Verify power assist unit is securely attached to wheelchair frame", redFlag: "Contact vendor if loose", interval: "1D" },
           { task: "Clean power assist unit with damp cloth", redFlag: "Contact vendor if cleaning reveals damage", interval: "1W" },
           { task: "Check all electrical connections and cables for wear or damage", redFlag: "Contact vendor if damaged", interval: "1W" },
           { task: "Test brakes by engaging and disengaging", redFlag: "Contact vendor if fails", interval: "1W" },
@@ -288,9 +256,6 @@
       "Air Backrest Cushion": { 
         label: "Air Backrest Cushion",
         tasks: [
-          { task: "Check cushion to ensure proper inflation and adjust as needed", redFlag: "Contact vendor if issues persist", interval: "1D" },
-          { task: "Inspect cover for tears, excessive wear, or abnormalities", redFlag: "Replace if damaged", interval: "1D" },
-          { task: "Knead air cells if uneven firmness is felt", redFlag: "Contact vendor if persists", interval: "1D" },
           { task: "Remove outer cover and machine wash", redFlag: "Contact vendor if cleaning fails", interval: "1W" },
           { task: "Clean air cushion with damp cloth", redFlag: "Contact vendor if degraded", interval: "1M" },
           { task: "Ensure all fill valves are closed securely", redFlag: "Contact vendor if leaks", interval: "1M" },
@@ -300,8 +265,6 @@
       "Foam Backrest Cushion": { 
         label: "Foam Backrest Cushion",
         tasks: [
-          { task: "Check foam base to ensure foam consistency", redFlag: "Contact vendor if inconsistent", interval: "1D" },
-          { task: "Inspect cover for tears and excessive wear", redFlag: "Replace if damaged", interval: "1D" },
           { task: "Remove outer cover and machine wash", redFlag: "Contact vendor if cleaning fails", interval: "1W" },
           { task: "Clean foam base with damp cloth", redFlag: "Contact vendor if degraded", interval: "1M" },
           { task: "Call vendor for annual technician maintenance inspection", redFlag: "", interval: "1Y" }
@@ -310,9 +273,6 @@
       "Gel Backrest Cushion": { 
         label: "Gel Backrest Cushion",
         tasks: [
-          { task: "Check foam base to ensure foam consistency", redFlag: "Contact vendor if inconsistent", interval: "1D" },
-          { task: "Knead fluid pad to original consistency if firmer", redFlag: "Contact vendor if persists", interval: "1D" },
-          { task: "Inspect cover for tears and excessive wear", redFlag: "Replace if damaged", interval: "1D" },
           { task: "Remove outer cover and machine wash", redFlag: "Contact vendor if cleaning fails", interval: "1W" },
           { task: "Clean fluid insert with warm water and soap", redFlag: "Contact vendor if degraded", interval: "1M" },
           { task: "Clean foam base with damp cloth", redFlag: "Contact vendor if degraded", interval: "1M" },
@@ -322,9 +282,6 @@
       "Air Seat Cushion": { 
         label: "Air Seat Cushion",
         tasks: [
-          { task: "Check cushion to ensure proper inflation and adjust as needed", redFlag: "Contact vendor if issues persist", interval: "1D" },
-          { task: "Inspect cover for tears, excessive wear, or abnormalities", redFlag: "Replace if damaged", interval: "1D" },
-          { task: "Knead air cells if uneven firmness is felt", redFlag: "Contact vendor if persists", interval: "1D" },
           { task: "Remove outer cover and machine wash", redFlag: "Contact vendor if cleaning fails", interval: "1W" },
           { task: "Clean air cushion with damp cloth", redFlag: "Contact vendor if degraded", interval: "1M" },
           { task: "Ensure all fill valves are closed securely", redFlag: "Contact vendor if leaks", interval: "1M" },
@@ -334,8 +291,6 @@
       "Foam Seat Cushion": { 
         label: "Foam Seat Cushion",
         tasks: [
-          { task: "Check foam base to ensure foam consistency", redFlag: "Contact vendor if inconsistent", interval: "1D" },
-          { task: "Inspect cover for tears and excessive wear", redFlag: "Replace if damaged", interval: "1D" },
           { task: "Remove outer cover and machine wash", redFlag: "Contact vendor if cleaning fails", interval: "1W" },
           { task: "Clean foam base with damp cloth", redFlag: "Contact vendor if degraded", interval: "1M" },
           { task: "Call vendor for annual technician maintenance inspection", redFlag: "", interval: "1Y" }
@@ -344,9 +299,6 @@
       "Gel Seat Cushion": { 
         label: "Gel Seat Cushion",
         tasks: [
-          { task: "Check foam base to ensure foam consistency", redFlag: "Contact vendor if inconsistent", interval: "1D" },
-          { task: "Knead fluid pad to original consistency if firmer", redFlag: "Contact vendor if persists", interval: "1D" },
-          { task: "Inspect cover for tears and excessive wear", redFlag: "Replace if damaged", interval: "1D" },
           { task: "Remove outer cover and machine wash", redFlag: "Contact vendor if cleaning fails", interval: "1W" },
           { task: "Clean fluid insert with warm water and soap", redFlag: "Contact vendor if degraded", interval: "1M" },
           { task: "Clean foam base with damp cloth", redFlag: "Contact vendor if degraded", interval: "1M" },
@@ -485,63 +437,58 @@
       const endDate = new Date(now.getFullYear(), now.getMonth() + 12, now.getDate()); // 1 year from now
       const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
       const events = [];
+      const maxEvents = 100; // Safeguard to prevent browser overload
       let eventCount = 0;
-      const maxEvents = 500; // Safeguard to prevent browser overload
 
+      // Group tasks by interval and component
+      const tasksByInterval = {};
       selectedComponents.forEach(comp => {
         const schedule = MAINTENANCE_SCHEDULES[comp];
-        let currentDate = new Date(now); // Start from download date/time
         if (Array.isArray(schedule.tasks)) {
           schedule.tasks.forEach(task => {
-            let intervalDays = 0;
-            switch (task.interval) {
-              case "1D": intervalDays = 1; break;
-              case "1W": intervalDays = 7; break;
-              case "1M": intervalDays = 30; break;
-              case "3M": intervalDays = 90; break;
-              case "6M": intervalDays = 180; break;
-              case "1Y": intervalDays = 365; break;
+            if (["1W", "1M", "3M", "6M", "1Y"].includes(task.interval)) {
+              if (!tasksByInterval[task.interval]) tasksByInterval[task.interval] = {};
+              if (!tasksByInterval[task.interval][comp]) tasksByInterval[task.interval][comp] = [];
+              tasksByInterval[task.interval][comp].push({ task: task.task, redFlag: task.redFlag });
             }
-            let nextDate = new Date(currentDate);
-            let iteration = 0;
-            const maxIterations = Math.min(Math.ceil(365 / intervalDays), 52); // Cap to ~1 year or 52 weeks
-            while (nextDate <= endDate && iteration < maxIterations && eventCount < maxEvents) {
-              console.log(`Generating event for ${task.task} at ${nextDate.toISOString()}`);
-              const uid = `${profileId}-${nextDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
-              const vendorInfo = task.redFlag.includes("Contact your vendor") && contacts.vendor.phone
-                ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
-                : task.redFlag.includes("Contact your therapist") && contacts.therapist.phone
-                  ? `Therapist Contact: ${contacts.therapist.hospital}, ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email}`
-                  : "";
-              const description = `Please ${task.task}.\\n${task.redFlag}\\n${vendorInfo}`;
-              const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
+          });
+        }
+      });
 
-              events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${nextDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:Reminder - ${task.task} for ${schedule.label}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:Reminder - ${task.task} for ${schedule.label}\r\nEND:VALARM\r\nEND:VEVENT`);
-              nextDate.setDate(nextDate.getDate() + intervalDays);
-              iteration++;
+      // Generate events for each interval
+      Object.keys(tasksByInterval).forEach(interval => {
+        let intervalDays = 0;
+        switch (interval) {
+          case "1W": intervalDays = 7; break;
+          case "1M": intervalDays = 30; break;
+          case "3M": intervalDays = 90; break;
+          case "6M": intervalDays = 180; break;
+          case "1Y": intervalDays = 365; break;
+        }
+        let currentDate = new Date(now);
+        const maxIterations = Math.ceil(365 / intervalDays);
+        let iteration = 0;
+
+        while (currentDate <= endDate && iteration < maxIterations && eventCount < maxEvents) {
+          Object.keys(tasksByInterval[interval]).forEach(comp => {
+            const tasks = tasksByInterval[interval][comp];
+            if (tasks.length > 0 && eventCount < maxEvents) {
+              console.log(`Generating event for ${comp} at ${currentDate.toISOString()} for interval ${interval}`);
+              const uid = `${profileId}-${currentDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
+              const schedule = MAINTENANCE_SCHEDULES[comp];
+              const taskList = tasks.map(t => ` - ${t.task} (${t.redFlag ? t.redFlag : "No issues noted"})`).join("\\n");
+              const vendorInfo = contacts.vendor.phone ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}` : "";
+              const therapistInfo = contacts.therapist.phone ? `Therapist Contact: ${contacts.therapist.hospital}, ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email}` : "";
+              const description = `Please complete the following for ${schedule.label}:\\n${taskList}\\n${vendorInfo}\\n${therapistInfo}`;
+              const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
+              const summary = `Reminder - Maintenance for ${schedule.label} (${interval === "1W" ? "Weekly" : interval === "1M" ? "Monthly" : interval === "3M" ? "Every 3 Months" : interval === "6M" ? "Every 6 Months" : "Yearly"})`;
+
+              events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:${summary}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:${summary}\r\nEND:VALARM\r\nEND:VEVENT`);
               eventCount++;
             }
           });
-        } else {
-          const intervalDays = schedule.interval === "3M" ? 90 : 30; // Default to monthly
-          let iteration = 0;
-          const maxIterations = Math.ceil(365 / intervalDays);
-          while (currentDate <= endDate && iteration < maxIterations && eventCount < maxEvents) {
-            console.log(`Generating event for ${schedule.task} at ${currentDate.toISOString()}`);
-            const uid = `${profileId}-${currentDate.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
-            const vendorInfo = schedule.redFlag.includes("Contact your vendor") && contacts.vendor.phone
-              ? `Vendor Contact: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}`
-              : schedule.redFlag.includes("Contact your therapist") && contacts.therapist.phone
-                ? `Therapist Contact: ${contacts.therapist.hospital}, ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email}`
-                : "";
-            const description = `Please ${schedule.task}.\\n${schedule.redFlag}\\n${vendorInfo}`;
-            const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
-
-            events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${currentDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nSUMMARY:Reminder - ${schedule.task} for ${schedule.label}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:Reminder - ${schedule.task} for ${schedule.label}\r\nEND:VALARM\r\nEND:VEVENT`);
-            currentDate.setMonth(currentDate.getMonth() + (intervalDays / 30));
-            iteration++;
-            eventCount++;
-          }
+          currentDate.setDate(currentDate.getDate() + intervalDays);
+          iteration++;
         }
       });
 
