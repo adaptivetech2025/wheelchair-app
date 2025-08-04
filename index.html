@@ -1,229 +1,625 @@
-body {
-  margin: 0;
-  font-family: Georgia, "Times New Roman", Arial, sans-serif;
-  color: #1e293b;
-  background-image: url('wheelchair-bg.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  text-align: center;
-}
-h1 {
-  font-size: 1.75rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  text-transform: capitalize;
-}
-.card {
-  width: 100%;
-  max-width: 40rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-.selection-container {
-  max-height: 60vh;
-  overflow-y: auto;
-  margin-bottom: 1.5rem;
-}
-.label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #1e293b;
-  margin-top: 0.75rem;
-}
-.select, .checkbox-group {
-  margin-top: 0.5rem;
-  width: 100%;
-  border: 1px solid #93c5fd;
-  border-radius: 0.375rem;
-  padding: 0.75rem;
-  font-size: 1rem;
-  text-align: left;
-}
-.checkbox-group input {
-  margin-right: 0.75rem;
-}
-.button {
-  width: 100%;
-  background-color: #3b82f6;
-  color: #ffffff;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-.button:hover {
-  background-color: #2563eb;
-}
-.turn-on-button {
-  width: 100%;
-  background-color: #10B981; /* Green color */
-  color: #ffffff;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 1.5rem;
-}
-.turn-on-button:hover {
-  background-color: #059669; /* Darker green on hover */
-}
-.reset-button {
-  width: 100%;
-  background-color: #ef4444; /* Red color */
-  color: #ffffff;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-.reset-button:hover {
-  background-color: #dc2626; /* Darker red on hover */
-}
-.faq-button {
-  width: 100%;
-  background-color: #F59E0B; /* Yellow color */
-  color: #ffffff;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-.faq-button:hover {
-  background-color: #D97706; /* Darker yellow on hover */
-}
-.profile, .contact-card, .reminders {
-  margin-top: 1.5rem;
-  width: 100%;
-  max-width: 40rem;
-}
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  text-transform: capitalize;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1rem;
-}
-th, td {
-  padding: 0.75rem;
-  text-align: left;
-}
-th {
-  background-color: #e0e7ff;
-  font-weight: 500;
-}
-.error {
-  color: #dc2626;
-  padding: 1.5rem;
-}
-.hidden {
-  display: none;
-}
-.section {
-  margin-bottom: 1.5rem;
-}
-.profile-link {
-  margin-top: 1rem;
-  color: #3b82f6;
-  text-decoration: underline;
-  cursor: pointer;
-}
-.profile-link:hover {
-  color: #2563eb;
-}
-.nav-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-.nav-buttons .button {
-  width: 48%;
-  margin: 0 0.5rem;
-}
-.admin-login {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background-color: #3b82f6;
-  color: #ffffff;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  border: none;
-  cursor: pointer;
-  font-size: 0.75rem;
-}
-.admin-login:hover {
-  background-color: #2563eb;
-}
-.admin-data {
-  margin-top: 1rem;
-  color: #1e293b;
-  font-size: 0.9rem;
-}
-.contact-form input, .contact-form select {
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.75rem;
-  border: 1px solid #93c5fd;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-}
-.since-date {
-  font-size: 0.9rem;
-  color: #1e293b;
-  margin-top: 1rem;
-}
-.instructions {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  border: 1px solid #93c5fd;
-  border-radius: 0.375rem;
-  background-color: #f9fafb;
-  display: none;
-}
-.instructions h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-.instructions p {
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
-}
-.disclaimer {
-  font-size: 0.75rem;
-  font-style: italic;
-  color: #666;
-  margin-top: 1rem;
-  text-align: center;
-}
-@media (max-width: 480px) {
-  .card {
-    min-width: 20rem;
-    padding: 1.5rem;
-  }
-  .button, .turn-on-button, .reset-button, .faq-button {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wheelchair Maintenance Reminder</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://favicon.io/favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Wheelchair Reminder">
+</head>
+<body>
+  <button class="admin-login" onclick="adminLogin()">Admin Login</button>
+  <div class="container">
+    <h1>Wheelchair Maintenance Reminder</h1>
+    <div id="selection-card" class="card">
+      <h2>Select Your Equipment</h2>
+      <div class="selection-container">
+        <table>
+          <tr><th colspan="2" class="label">Primary Equipment (Optional)</th></tr>
+          <tr><td colspan="2"><select id="primary-equipment" class="select"><option value="">Select one</option><option value="Rigid Ultra-Light Manual Wheelchair">Rigid Ultra-Light Manual Wheelchair</option><option value="Folding Ultra-Light Manual Wheelchair">Folding Ultra-Light Manual Wheelchair</option><option value="Power Wheelchair with Power Seating Functions">Power Wheelchair with Power Seating Functions</option><option value="Power Wheelchair without Power Seating Functions">Power Wheelchair without Power Seating Functions</option><option value="Tilt in Space Manual Wheelchair">Tilt in Space Manual Wheelchair</option></select></td></tr>
+          <tr><th colspan="2" class="label">Optional Power Assist (Select one or both)</th></tr>
+          <tr><td><label><input type="checkbox" id="detachable-power-assist" value="Detachable Power Assist"> Detachable Power Assist</label></td><td><label><input type="checkbox" id="hand-rim-power-assist" value="Hand-Rim Activated Power Assist"> Hand-Rim Activated Power Assist</label></td></tr>
+          <tr><th colspan="2" class="label">Seat Cushions (One or more)</th></tr>
+          <tr><td><label><input type="checkbox" id="air-seat" value="Air Seat Cushion"> Air Seat Cushion</label></td><td><label><input type="checkbox" id="foam-seat" value="Foam Seat Cushion"> Foam Seat Cushion</label></td></tr>
+          <tr><td><label><input type="checkbox" id="gel-seat" value="Gel Seat Cushion"> Gel Seat Cushion</label></td><td></td></tr>
+          <tr><th colspan="2" class="label">Backrest Cushions (One or more)</th></tr>
+          <tr><td><label><input type="checkbox" id="air-backrest" value="Air Backrest Cushion"> Air Backrest Cushion</label></td><td><label><input type="checkbox" id="foam-backrest" value="Foam Backrest Cushion"> Foam Backrest Cushion</label></td></tr>
+          <tr><td><label><input type="checkbox" id="gel-backrest" value="Gel Backrest Cushion"> Gel Backrest Cushion</label></td><td></td></tr>
+        </table>
+      </div>
+      <div class="nav-buttons">
+        <button id="home-button" class="button">Home</button>
+        <button id="next-to-contact" class="button">Next: Enter Contact Info</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="contact-card" class="card hidden">
+      <h2>Contact Information</h2>
+      <form id="contact-form">
+        <div class="label">Wheelchair Vendor</div>
+        <input type="text" id="vendor-company" placeholder="Company Name" required>
+        <input type="text" id="vendor-rep" placeholder="Representative Name" required>
+        <input type="tel" id="vendor-phone" placeholder="Phone Number" required>
+        <input type="email" id="vendor-email" placeholder="Email" required>
+        <div class="label">Clinical Therapist</div>
+        <input type="text" id="therapist-hospital" placeholder="Hospital/Clinic Name" required>
+        <input type="text" id="therapist-name" placeholder="Therapist Name" required>
+        <input type="tel" id="therapist-phone" placeholder="Phone Number" required>
+        <input type="email" id="therapist-email" placeholder="Email" required>
+      </form>
+      <div class="nav-buttons">
+        <button id="home-button" class="button">Home</button>
+        <button id="submit-contact" class="button">Submit</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="reminders-card" class="card hidden">
+      <h2>My Equipment & Reminders</h2>
+      <ul id="equipment-list"></ul>
+      <div class="nav-buttons">
+        <button id="home-button" class="button">Home</button>
+        <button id="submit-reminders" class="button">Finish</button>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="profile-card" class="card hidden">
+      <h2>My Mobility Equipment</h2>
+      <ul id="profile-list"></ul>
+      <div class="profile-link" onclick="editContacts()">Edit Contact Information</div>
+      <div class="profile-link" onclick="editProfile()">Edit My Equipment</div>
+      <div class="nav-buttons">
+        <!-- Removed "Home" button from profile -->
+      </div>
+      <button id="turn-on-reminders-profile" class="turn-on-button">Turn On Reminders</button>
+      <button id="reset-data-profile" class="reset-button">Reset/Erase Data</button>
+      <button id="faq-button" class="faq-button" onclick="window.open('https://drive.google.com/drive/folders/1r39RgaP2TBT8q-FUE5YirebYoezFSqV7', '_blank')">FAQ/Resource Guide</button>
+      <div class="instructions" id="calendar-instructions">
+        <h3>How to Add Your Reminder Schedule</h3>
+        <p>1. Click the "Download Reminder Schedule" button below to download your custom calendar file, or the download will automatically begin once you select the “Turn On Reminders” button.</p>
+        <p>2. Open your calendar app (e.g., Google Calendar, Apple Calendar).</p>
+        <p>3. Import the downloaded .ics file (look for "Import" or "Add Calendar" in the settings; instructions may differ depending on your browser).</p>
+        <p>4. Set your preferred reminder time (e.g., 1 day before) in the calendar app if needed; default alerts are set for 9:00 AM in your local time zone.</p>
+        <p><strong>Note:</strong> This schedule provides one weekly reminder for the next year, listing all maintenance tasks due for your selected equipment components.</p>
+        <button id="download-ics" class="button" style="margin-top: 1rem;">Download Reminder Schedule</button>
+      </div>
+      <div class="disclaimer">
+        <em>*Developed by Blake Perkins PT, DPT, ATP at the MetroHealth System Physical Medicine & Rehabilitation Department, supported by Craig H. Neilsen Allied Health Research Award of ASIA. This app supports end-user autonomy with wheelchair and seating system maintenance but is not intended to replace user manuals. For questions or concerns, contact bperkins@metrohealth.org.*</em>
+      </div>
+      <div class="since-date" id="since-date"></div>
+    </div>
+    <div id="admin-data" class="card hidden">
+      <h2>Admin Statistics</h2>
+      <p>Mobility Base: <span id="mobility-base-count"></span></p>
+      <p>Backrest Cushion: <span id="backrest-count"></span></p>
+      <p>Seat Cushion: <span id="seat-count"></span></p>
+      <p>Total Users: <span id="user-count">0</span></p>
+      <p>Users with Reminders: <span id="reminder-count">0</span></p>
+      <p>Users with Reminders Disabled: <span id="disable-count">0</span></p>
+    </div>
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+  <script>
+    const MAINTENANCE_SCHEDULES = {
+      "Rigid Ultra-Light Manual Wheelchair": { 
+        label: "Rigid Ultra-Light Manual Wheelchair",
+        tasks: [
+          { task: "Check wheelchair alignment", redFlag: "Contact vendor if misaligned", interval: "1W" },
+          { task: "Inspect hardware", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Inspect spokes", redFlag: "Contact vendor if broken", interval: "1W" },
+          { task: "Tighten spokes", redFlag: "Contact vendor if uneven", interval: "3M" },
+          { task: "Check hubs/rims", redFlag: "Contact vendor if cracked", interval: "3M" },
+          { task: "Check wheel trueness", redFlag: "Contact vendor if wobbly", interval: "3M" },
+          { task: "Clean axles", redFlag: "Contact vendor if worn", interval: "1W" },
+          { task: "Check tires", redFlag: "Contact vendor if worn", interval: "1W" },
+          { task: "Inspect handrims", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Test wheel locks", redFlag: "Contact vendor if fail", interval: "1W" },
+          { task: "Inspect upholstery", redFlag: "Contact vendor if torn", interval: "3M" },
+          { task: "Check casters/forks", redFlag: "Contact vendor if cracked", interval: "1W" },
+          { task: "Inspect footrests", redFlag: "Contact vendor if loose", interval: "3M" },
+          { task: "Check frame", redFlag: "Contact vendor if cracked", interval: "3M" },
+          { task: "Inspect anti-tips", redFlag: "Contact vendor if worn", interval: "3M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Folding Ultra-Light Manual Wheelchair": { 
+        label: "Folding Ultra-Light Manual Wheelchair",
+        tasks: [
+          { task: "Check wheelchair alignment", redFlag: "Contact vendor if misaligned", interval: "1W" },
+          { task: "Inspect hardware", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Inspect spokes", redFlag: "Contact vendor if broken", interval: "1W" },
+          { task: "Tighten spokes", redFlag: "Contact vendor if uneven", interval: "3M" },
+          { task: "Check hubs/rims", redFlag: "Contact vendor if cracked", interval: "3M" },
+          { task: "Check wheel trueness", redFlag: "Contact vendor if wobbly", interval: "3M" },
+          { task: "Clean axles", redFlag: "Contact vendor if worn", interval: "1W" },
+          { task: "Check tires", redFlag: "Contact vendor if worn", interval: "1W" },
+          { task: "Inspect handrims", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Test wheel locks", redFlag: "Contact vendor if fail", interval: "1W" },
+          { task: "Inspect upholstery", redFlag: "Contact vendor if torn", interval: "3M" },
+          { task: "Check casters/forks", redFlag: "Contact vendor if cracked", interval: "1W" },
+          { task: "Inspect footrests", redFlag: "Contact vendor if loose", interval: "3M" },
+          { task: "Check frame", redFlag: "Contact vendor if cracked", interval: "3M" },
+          { task: "Inspect anti-tips", redFlag: "Contact vendor if worn", interval: "3M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Power Wheelchair with Power Seating Functions": { 
+        label: "Power Wheelchair with Power Seating Functions",
+        tasks: [
+          { task: "Inspect belts", redFlag: "Contact vendor if worn", interval: "1W" },
+          { task: "Check tires", redFlag: "Contact vendor if low", interval: "1W" },
+          { task: "Test brakes", redFlag: "Contact vendor if fail", interval: "1W" },
+          { task: "Inspect controller", redFlag: "Contact vendor if corroded", interval: "1W" },
+          { task: "Secure parts", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Check cables", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Inspect gaiter", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Secure components", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Test electrics", redFlag: "Contact vendor if fail", interval: "1W" },
+          { task: "Test creep mode", redFlag: "Contact vendor if fail", interval: "1W" },
+          { task: "Test profiles", redFlag: "Contact vendor if issue", interval: "1W" },
+          { task: "Check straps", redFlag: "Contact vendor if weak", interval: "1W" },
+          { task: "Clean unit", redFlag: "Contact vendor if damaged", interval: "1M" },
+          { task: "Check upholstery", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Test freewheel", redFlag: "Contact vendor if fail", interval: "1M" },
+          { task: "Check tire wear", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Inspect casters", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Check forks", redFlag: "Contact vendor if damaged", interval: "1M" },
+          { task: "Inspect hardware", redFlag: "Contact vendor if loose", interval: "1M" },
+          { task: "Check fasteners", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Inspect straps", redFlag: "Discontinue if frayed", interval: "1M" },
+          { task: "Check tire pressure", redFlag: "Contact vendor if uneven", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Power Wheelchair without Power Seating Functions": { 
+        label: "Power Wheelchair without Power Seating Functions",
+        tasks: [
+          { task: "Inspect belts", redFlag: "Contact vendor if worn", interval: "1W" },
+          { task: "Check tires", redFlag: "Contact vendor if low", interval: "1W" },
+          { task: "Test brakes", redFlag: "Contact vendor if fail", interval: "1W" },
+          { task: "Inspect controller", redFlag: "Contact vendor if corroded", interval: "1W" },
+          { task: "Secure parts", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Check cables", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Inspect gaiter", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Secure components", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Clean unit", redFlag: "Contact vendor if damaged", interval: "1M" },
+          { task: "Check upholstery", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Test freewheel", redFlag: "Contact vendor if fail", interval: "1M" },
+          { task: "Check tire wear", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Inspect casters", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Check forks", redFlag: "Contact vendor if damaged", interval: "1M" },
+          { task: "Inspect hardware", redFlag: "Contact vendor if loose", interval: "1M" },
+          { task: "Check fasteners", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Inspect straps", redFlag: "Discontinue if frayed", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Tilt in Space Manual Wheelchair": { 
+        label: "Tilt in Space Manual Wheelchair",
+        tasks: [
+          { task: "Check alignment", redFlag: "Contact vendor if misaligned", interval: "1W" },
+          { task: "Inspect grips", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Check caster tension", redFlag: "Contact vendor if wobbly", interval: "1W" },
+          { task: "Adjust caster locknut", redFlag: "Contact vendor if issue", interval: "1W" },
+          { task: "Secure fasteners", redFlag: "Contact vendor if loose", interval: "1W" },
+          { task: "Clear caster debris", redFlag: "Contact vendor if clogged", interval: "1W" },
+          { task: "Check tires", redFlag: "Contact vendor if low", interval: "1W" },
+          { task: "Check wheel stability", redFlag: "Contact vendor if wobbly", interval: "1M" },
+          { task: "Check bearings", redFlag: "Contact vendor if wobbly", interval: "1M" },
+          { task: "Check wheel locks", redFlag: "Contact vendor if interfere", interval: "1M" },
+          { task: "Inspect pivot points", redFlag: "Contact vendor if worn", interval: "1M" },
+          { task: "Test lock engagement", redFlag: "Contact vendor if hard", interval: "1M" },
+          { task: "Clean axles", redFlag: "Contact vendor if dirty", interval: "1M" },
+          { task: "Clean slides/bearings", redFlag: "Contact vendor if dirty", interval: "1M" },
+          { task: "Inspect strap", redFlag: "Replace if worn", interval: "1M" },
+          { task: "Check guards", redFlag: "Contact vendor if bent", interval: "6M" },
+          { task: "Secure arms", redFlag: "Contact vendor if loose", interval: "6M" },
+          { task: "Test arm locks", redFlag: "Contact vendor if fail", interval: "6M" },
+          { task: "Check arm upholstery", redFlag: "Contact vendor if torn", interval: "6M" },
+          { task: "Align arm pad", redFlag: "Contact vendor if misaligned", interval: "6M" },
+          { task: "Check upholstery", redFlag: "Contact vendor if torn", interval: "6M" },
+          { task: "Test lever cables", redFlag: "Contact vendor if fail", interval: "6M" },
+          { task: "Inspect handrims", redFlag: "Contact vendor if rough", interval: "6M" },
+          { task: "Check labels", redFlag: "Contact vendor if missing", interval: "6M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Hand-Rim Activated Power Assist": { 
+        label: "Hand-Rim Activated Power Assist",
+        tasks: [
+          { task: "Clean unit", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Check cables", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Inspect handrims", redFlag: "Contact vendor if rough", interval: "1W" },
+          { task: "Check tires", redFlag: "Contact vendor if low", interval: "1W" },
+          { task: "Lubricate parts", redFlag: "Contact vendor if noisy", interval: "1M" },
+          { task: "Inspect motor", redFlag: "Contact vendor if noisy", interval: "1M" },
+          { task: "Check battery", redFlag: "Contact vendor if corroded", interval: "1M" },
+          { task: "Update firmware", redFlag: "Contact vendor if issue", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Detachable Power Assist": { 
+        label: "Detachable Power Assist",
+        tasks: [
+          { task: "Clean unit", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Check cables", redFlag: "Contact vendor if damaged", interval: "1W" },
+          { task: "Test brakes", redFlag: "Contact vendor if fail", interval: "1W" },
+          { task: "Check tires", redFlag: "Contact vendor if low", interval: "1W" },
+          { task: "Lubricate parts", redFlag: "Contact vendor if noisy", interval: "1M" },
+          { task: "Inspect motor", redFlag: "Contact vendor if noisy", interval: "1M" },
+          { task: "Check battery", redFlag: "Contact vendor if corroded", interval: "1M" },
+          { task: "Update firmware", redFlag: "Contact vendor if issue", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Air Backrest Cushion": { 
+        label: "Air Backrest Cushion",
+        tasks: [
+          { task: "Wash cover", redFlag: "Contact vendor if fails", interval: "1W" },
+          { task: "Clean cushion", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Secure valves", redFlag: "Contact vendor if leaks", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Foam Backrest Cushion": { 
+        label: "Foam Backrest Cushion",
+        tasks: [
+          { task: "Wash cover", redFlag: "Contact vendor if fails", interval: "1W" },
+          { task: "Clean foam", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Gel Backrest Cushion": { 
+        label: "Gel Backrest Cushion",
+        tasks: [
+          { task: "Wash cover", redFlag: "Contact vendor if fails", interval: "1W" },
+          { task: "Clean fluid", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Clean foam", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Air Seat Cushion": { 
+        label: "Air Seat Cushion",
+        tasks: [
+          { task: "Wash cover", redFlag: "Contact vendor if fails", interval: "1W" },
+          { task: "Clean cushion", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Secure valves", redFlag: "Contact vendor if leaks", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Foam Seat Cushion": { 
+        label: "Foam Seat Cushion",
+        tasks: [
+          { task: "Wash cover", redFlag: "Contact vendor if fails", interval: "1W" },
+          { task: "Clean foam", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      },
+      "Gel Seat Cushion": { 
+        label: "Gel Seat Cushion",
+        tasks: [
+          { task: "Wash cover", redFlag: "Contact vendor if fails", interval: "1W" },
+          { task: "Clean fluid", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Clean foam", redFlag: "Contact vendor if degraded", interval: "1M" },
+          { task: "Annual inspection", redFlag: "", interval: "1Y" }
+        ]
+      }
+    };
+
+    let selectedComponents = [];
+    let profileId = localStorage.getItem("profileId") || generateProfileId();
+    let contacts = JSON.parse(localStorage.getItem(`contacts_${profileId}`) || "{}");
+    let userCount = parseInt(localStorage.getItem("userCount") || "0");
+    let reminderCount = parseInt(localStorage.getItem("reminderCount") || "0");
+    let disableCount = parseInt(localStorage.getItem("disableCount") || "0");
+    let mobilityBaseCount = JSON.parse(localStorage.getItem("mobilityBaseCount") || '{"n/a": 0, "Rigid Ultra-Light Manual Wheelchair": 0, "Folding Ultra-Light Manual Wheelchair": 0, "Power Wheelchair with Power Seating Functions": 0, "Power Wheelchair without Power Seating Functions": 0, "Tilt in Space Manual Wheelchair": 0, "Hand-Rim Activated Power Assist": 0, "Detachable Power Assist": 0}');
+    let backrestCount = JSON.parse(localStorage.getItem("backrestCount") || '{"n/a": 0, "Air Backrest Cushion": 0, "Foam Backrest Cushion": 0, "Gel Backrest Cushion": 0}');
+    let seatCount = JSON.parse(localStorage.getItem("seat-count") || '{"n/a": 0, "Air Seat Cushion": 0, "Foam Seat Cushion": 0, "Gel Seat Cushion": 0}');
+    let startDate = localStorage.getItem(`startDate_${profileId}`) || new Date().toLocaleDateString();
+    let currentStep = localStorage.getItem(`currentStep_${profileId}`) || "selection";
+    let remindersEnabled = localStorage.getItem(`remindersEnabled_${profileId}`) !== "false";
+
+    function generateProfileId() {
+      try {
+        return fetch("https://api.ipify.org?format=json")
+          .then(res => res.json())
+          .then(data => data.ip)
+          .catch(() => "default-" + Date.now());
+      } catch (error) {
+        return "default-" + Date.now();
+      }
+    }
+
+    function updateDisplay() {
+      document.getElementById("selection-card").classList.toggle("hidden", currentStep !== "selection");
+      document.getElementById("contact-card").classList.toggle("hidden", currentStep !== "contact");
+      document.getElementById("reminders-card").classList.toggle("hidden", currentStep !== "reminders");
+      document.getElementById("profile-card").classList.toggle("hidden", currentStep !== "profile");
+      document.getElementById("admin-data").classList.toggle("hidden", currentStep !== "admin");
+      updateSinceDate();
+      updateProfileList();
+      updateEquipmentList();
+      document.getElementById("calendar-instructions").style.display = remindersEnabled ? "block" : "none"; // Show instructions if reminders enabled
+    }
+
+    function updateSinceDate() {
+      const sinceDateElements = document.querySelectorAll("#since-date");
+      sinceDateElements.forEach(el => el.textContent = `Maintaining my equipment since ${startDate}`);
+    }
+
+    function updateProfileList() {
+      const profileList = document.getElementById("profile-list");
+      profileList.innerHTML = selectedComponents.map(comp => `<li>${MAINTENANCE_SCHEDULES[comp]?.label || (Array.isArray(MAINTENANCE_SCHEDULES[comp]?.tasks) ? MAINTENANCE_SCHEDULES[comp].tasks[0].label : comp)}</li>`).join("");
+    }
+
+    function updateEquipmentList() {
+      const equipmentList = document.getElementById("equipment-list");
+      equipmentList.innerHTML = selectedComponents.map(comp => `<li>${MAINTENANCE_SCHEDULES[comp]?.label || (Array.isArray(MAINTENANCE_SCHEDULES[comp]?.tasks) ? MAINTENANCE_SCHEDULES[comp].tasks[0].label : comp)}</li>`).join("");
+    }
+
+    function saveData() {
+      if (profileId) {
+        localStorage.setItem(`profile_${profileId}`, JSON.stringify(selectedComponents));
+        localStorage.setItem(`contacts_${profileId}`, JSON.stringify(contacts));
+        localStorage.setItem(`currentStep_${profileId}`, currentStep);
+        localStorage.setItem(`remindersEnabled_${profileId}`, remindersEnabled);
+        // Update category counts
+        Object.keys(mobilityBaseCount).forEach(key => mobilityBaseCount[key] = 0);
+        Object.keys(backrestCount).forEach(key => backrestCount[key] = 0);
+        Object.keys(seatCount).forEach(key => seatCount[key] = 0);
+        selectedComponents.forEach(comp => {
+          if (["Rigid Ultra-Light Manual Wheelchair", "Folding Ultra-Light Manual Wheelchair", "Power Wheelchair with Power Seating Functions", "Power Wheelchair without Power Seating Functions", "Tilt in Space Manual Wheelchair", "Hand-Rim Activated Power Assist", "Detachable Power Assist"].includes(comp)) {
+            mobilityBaseCount[comp] = (mobilityBaseCount[comp] || 0) + 1;
+          } else if (comp.includes("Backrest")) {
+            backrestCount[comp] = (backrestCount[comp] || 0) + 1;
+          } else if (comp.includes("Seat")) {
+            seatCount[comp] = (seatCount[comp] || 0) + 1;
+          }
+        });
+        localStorage.setItem("mobilityBaseCount", JSON.stringify(mobilityBaseCount));
+        localStorage.setItem("backrestCount", JSON.stringify(backrestCount));
+        localStorage.setItem("seat-count", JSON.stringify(seatCount));
+        localStorage.setItem("userCount", userCount);
+        localStorage.setItem("reminder-count", reminderCount);
+        localStorage.setItem("disable-count", disableCount);
+      }
+    }
+
+    function goHome() {
+      currentStep = "profile";
+      updateDisplay();
+      saveData();
+    }
+
+    function goNext() {
+      if (currentStep === "selection") {
+        const primaryEquipment = document.getElementById("primary-equipment").value || null;
+        if (primaryEquipment) selectedComponents = [primaryEquipment];
+        const detachablePowerAssist = document.getElementById("detachable-power-assist").checked ? "Detachable Power Assist" : null;
+        const handRimPowerAssist = document.getElementById("hand-rim-power-assist").checked ? "Hand-Rim Activated Power Assist" : null;
+        if (detachablePowerAssist) selectedComponents.push(detachablePowerAssist);
+        if (handRimPowerAssist) selectedComponents.push(handRimPowerAssist);
+        ["air-seat", "foam-seat", "gel-seat", "air-backrest", "foam-backrest", "gel-backrest"].forEach(id => {
+          if (document.getElementById(id).checked) selectedComponents.push(document.getElementById(id).value);
+        });
+        currentStep = "contact";
+      } else if (currentStep === "contact") {
+        contacts.vendor = {
+          company: document.getElementById("vendor-company").value || "",
+          rep: document.getElementById("vendor-rep").value || "",
+          phone: document.getElementById("vendor-phone").value || "",
+          email: document.getElementById("vendor-email").value || ""
+        };
+        contacts.therapist = {
+          hospital: document.getElementById("therapist-hospital").value || "",
+          name: document.getElementById("therapist-name").value || "",
+          phone: document.getElementById("therapist-phone").value || "",
+          email: document.getElementById("therapist-email").value || ""
+        };
+        currentStep = "reminders";
+      }
+      updateDisplay();
+      saveData();
+    }
+
+    function submitReminders() {
+      const equipmentList = document.getElementById("equipment-list");
+      equipmentList.innerHTML = selectedComponents.map(comp => `<li>${MAINTENANCE_SCHEDULES[comp]?.label || (Array.isArray(MAINTENANCE_SCHEDULES[comp]?.tasks) ? MAINTENANCE_SCHEDULES[comp].tasks[0].label : comp)}</li>`).join("");
+      currentStep = "profile"; // Redirect to profile on Finish
+      updateDisplay();
+      saveData();
+    }
+
+    function generateICS() {
+      const now = new Date(); // Use local time
+      now.setHours(9, 0, 0, 0); // Set to 9:00 AM local time
+      const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; // Keep DTSTAMP in UTC for compatibility
+      const events = [];
+      const maxEvents = 1; // Single recurring event
+      let eventCount = 0;
+
+      // Collect all tasks across all components
+      const allTasks = [];
+      selectedComponents.forEach(comp => {
+        const schedule = MAINTENANCE_SCHEDULES[comp];
+        if (Array.isArray(schedule.tasks)) {
+          schedule.tasks.forEach(task => {
+            if (["1W", "1M", "3M", "6M", "1Y"].includes(task.interval)) {
+              allTasks.push({ comp: comp, task: task.task, redFlag: task.redFlag, interval: task.interval });
+            }
+          });
+        }
+      });
+
+      // Generate one weekly recurring event with all due tasks
+      if (allTasks.length > 0 && eventCount < maxEvents) {
+        console.log(`Generating recurring event at ${now.toISOString()}`);
+        const uid = `${profileId}-${now.getTime()}-${Math.random().toString(36).substr(2, 9)}`;
+        const weekStart = new Date(now);
+        const weekEnd = new Date(now);
+        weekEnd.setDate(weekEnd.getDate() + 6); // End of the first week
+        const dueTasks = [];
+
+        allTasks.forEach(task => {
+          const intervalDays = { "1W": 7, "1M": 30, "3M": 90, "6M": 180, "1Y": 365 }[task.interval];
+          if (intervalDays) {
+            const lastDueDate = new Date(now);
+            lastDueDate.setDate(lastDueDate.getDate() - (lastDueDate.getDate() % intervalDays)); // Align to last due date
+            while (lastDueDate <= weekEnd) {
+              if (lastDueDate >= weekStart && lastDueDate <= weekEnd) {
+                dueTasks.push({ 
+                  comp: task.comp.replace(/Rigid Ultra-Light Manual Wheelchair|Power Wheelchair with Power Seating Functions|Power Wheelchair without Power Seating Functions|Tilt in Space Manual Wheelchair|Folding Ultra-Light Manual Wheelchair/, "your wheelchair")
+                           .replace(/Hand-Rim Activated Power Assist|Detachable Power Assist/, "your power assist device")
+                           .replace(/Air Backrest Cushion|Foam Backrest Cushion|Gel Backrest Cushion/, "your backrest cushion")
+                           .replace(/Air Seat Cushion|Foam Seat Cushion|Gel Seat Cushion/, "your seat cushion"),
+                  task: task.task, 
+                  redFlag: task.redFlag ? task.redFlag : "" 
+                });
+              }
+              lastDueDate.setDate(lastDueDate.getDate() + intervalDays);
+            }
+          }
+        });
+
+        const taskList = [...new Set(dueTasks.map(t => ` - ${t.comp}: ${t.task}${t.redFlag ? ` (${t.redFlag})` : ""}`))].join("\\n"); // Concise with red flags
+        const vendorInfo = contacts.vendor.phone ? `Vendor: ${contacts.vendor.company}, ${contacts.vendor.rep}, ${contacts.vendor.phone}, ${contacts.vendor.email}` : "Vendor: Contact your vendor for support";
+        const therapistInfo = contacts.therapist.phone ? `Therapist: ${contacts.therapist.hospital}, ${contacts.therapist.name}, ${contacts.therapist.phone}, ${contacts.therapist.email}` : "";
+        const faqLink = "FAQ/Resource Guide: https://drive.google.com/drive/folders/1r39RgaP2TBT8q-FUE5YirebYoezFSqV7";
+        const description = `Tasks due this week:\\n${taskList}\\n${vendorInfo}${therapistInfo ? "\\n" + therapistInfo : ""}\\n${faqLink}`;
+        const foldedDescription = `DESCRIPTION:${description.replace(/(.{1,70})(?:\s|$)/g, '$1\r\n ').trim()}`;
+        const summary = `Mobility Equipment Maintenance Due (Weekly)`;
+
+        events.push(`BEGIN:VEVENT\r\nDTSTAMP:${dtstamp}\r\nUID:${uid}\r\nDTSTART:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\nDURATION:P1D\r\nRRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=52\r\nSUMMARY:${summary}\r\n${foldedDescription}\r\nBEGIN:VALARM\r\nTRIGGER:-PT0H\r\nACTION:DISPLAY\r\nDESCRIPTION:${summary}\r\nEND:VALARM\r\nEND:VEVENT`);
+        eventCount++;
+      }
+
+      if (eventCount >= maxEvents) {
+        console.warn(`Event limit (${maxEvents}) reached, some reminders may be omitted.`);
+      }
+
+      if (events.length > 0) {
+        const icsContent = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wheelchair Maintenance Reminder//EN\r\n${events.join('\r\n')}\r\nEND:VCALENDAR`;
+
+        try {
+          const blob = new Blob([icsContent], { type: 'text/calendar' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `wheelchair_maintenance_${profileId}.ics`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          console.log(`Generated ${eventCount} events successfully.`);
+        } catch (e) {
+          console.error("Blob error:", e);
+          alert("Failed to generate reminder schedule. Please try again or contact bperkins@metrohealth.org for support.");
+        }
+      } else {
+        alert("No equipment selected to generate a reminder schedule.");
+      }
+    }
+
+    function turnOffReminders() {
+      // This function is now unused but kept for reference
+      remindersEnabled = false;
+      localStorage.setItem(`remindersEnabled_${profileId}`, "false");
+      disableCount++;
+      localStorage.setItem("disable-count", disableCount);
+      document.getElementById("disable-count").textContent = disableCount;
+      document.getElementById("calendar-instructions").style.display = "none";
+      alert("Reminders have been turned off.");
+    }
+
+    function turnOnReminders() {
+      if (selectedComponents.length > 0) {
+        if (confirm("Are you sure you want to turn on reminders? A custom calendar file with weekly schedules will be generated.")) {
+          remindersEnabled = true;
+          localStorage.setItem(`remindersEnabled_${profileId}`, "true");
+          generateICS(); // Generate and download ICS file
+          document.getElementById("calendar-instructions").style.display = "block"; // Show instructions
+          alert("Reminders turned on; download the calendar file and import it into your calendar app for the next 1 year.");
+        }
+      } else {
+        alert("Please select at least one piece of equipment to enable reminders.");
+      }
+    }
+
+    function resetData() {
+      if (confirm("Are you sure you want to erase all data and reset the app?")) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
+
+    function editContacts() {
+      currentStep = "contact";
+      updateDisplay();
+      const savedContacts = JSON.parse(localStorage.getItem(`contacts_${profileId}`) || "{}");
+      if (savedContacts.vendor.company) {
+        document.getElementById("vendor-company").value = savedContacts.vendor.company;
+        document.getElementById("vendor-rep").value = savedContacts.vendor.rep;
+        document.getElementById("vendor-phone").value = savedContacts.vendor.phone;
+        document.getElementById("vendor-email").value = savedContacts.vendor.email || "";
+      }
+      if (savedContacts.therapist.name) {
+        document.getElementById("therapist-hospital").value = savedContacts.therapist.hospital;
+        document.getElementById("therapist-name").value = savedContacts.therapist.name;
+        document.getElementById("therapist-phone").value = savedContacts.therapist.phone;
+        document.getElementById("therapist-email").value = savedContacts.therapist.email || "";
+      }
+      saveData();
+    }
+
+    function editProfile() {
+      currentStep = "selection";
+      updateDisplay();
+      selectedComponents = JSON.parse(localStorage.getItem(`profile_${profileId}`) || "[]");
+      if (selectedComponents.length > 0) {
+        document.getElementById("primary-equipment").value = selectedComponents.find(comp => Object.keys(MAINTENANCE_SCHEDULES).includes(comp)) || "";
+        ["detachable-power-assist", "hand-rim-power-assist", "air-seat", "foam-seat", "gel-seat", "air-backrest", "foam-backrest", "gel-backrest"].forEach(id => {
+          document.getElementById(id).checked = selectedComponents.includes(MAINTENANCE_SCHEDULES[id.replace("-", " ")]?.label);
+        });
+      }
+      saveData();
+    }
+
+    function adminLogin() {
+      const code = prompt("Enter admin code:");
+      if (code === "6009") {
+        currentStep = "admin";
+        updateDisplay();
+        updateAdminStats();
+      } else {
+        alert("Incorrect code.");
+      }
+    }
+
+    function updateAdminStats() {
+      document.getElementById("mobility-base-count").textContent = Object.entries(mobilityBaseCount).map(([key, value]) => `${key}: ${value}`).join(", ");
+      document.getElementById("backrest-count").textContent = Object.entries(backrestCount).map(([key, value]) => `${key}: ${value}`).join(", ");
+      document.getElementById("seat-count").textContent = Object.entries(seatCount).map(([key, value]) => `${key}: ${value}`).join(", ");
+      document.getElementById("user-count").textContent = userCount;
+      document.getElementById("reminder-count").textContent = reminderCount;
+      document.getElementById("disable-count").textContent = disableCount;
+    }
+
+    // Initialize on load
+    document.addEventListener("DOMContentLoaded", () => {
+      localStorage.setItem("profileId", profileId);
+      updateDisplay();
+      saveData();
+      updateAdminStats();
+
+      document.querySelectorAll("#home-button").forEach(btn => btn.addEventListener("click", goHome));
+      document.getElementById("next-to-contact").addEventListener("click", goNext);
+      document.getElementById("submit-contact").addEventListener("click", goNext);
+      document.getElementById("submit-reminders").addEventListener("click", submitReminders);
+      document.getElementById("turn-on-reminders-profile").addEventListener("click", turnOnReminders);
+      document.getElementById("reset-data-profile").addEventListener("click", resetData);
+      document.getElementById("download-ics").addEventListener("click", generateICS);
+    });
+  </script>
+</body>
+</html>
